@@ -1,0 +1,43 @@
+{
+    "food": [
+      {
+        "id": 1,
+        "question": "What sets Malabar Resoi apart from other South Indian restaurants?",
+        "answer": "At Malabar Resoi, we take pride in serving authentic South Indian dishes made with carefully selected, high-quality ingredients. Our chefs bring the rich flavors of Kerala to life, offering a truly unique and flavorful dining experience."
+      },
+      {
+        "id": 2,
+        "question": "Do you use organic or locally sourced ingredients?",
+        "answer": "We strive to use fresh, locally sourced ingredients whenever possible. While not all our ingredients are organic, we always ensure that they meet the highest standards of quality and freshness."
+      },
+      {
+        "id": 3,
+        "question": "What are your operating hours?",
+        "answer": "Our restaurant is open from 08:00 AM to 10:00 PM. For any changes to our hours during holidays or special occasions, please check our website or contact us directly."
+      }
+    ],
+  
+    "delivery": [
+      {
+        "id": 4,
+        "question": "Do you offer food delivery service?",
+        "answer": "Yes, we offer food delivery within a 5 km radius of our restaurant. You can place your order directly through our website, and we'll ensure your food reaches you fresh and on time."
+      },
+      {
+        "id": 5,
+        "question": "What is the delivery radius or area covered by your restaurant?",
+        "answer": "We deliver within a 5 km radius from our restaurant. If you’re within this area, simply place an order online and enjoy our South Indian delicacies at home."
+      },
+      {
+        "id": 6,
+        "question": "What are your delivery hours?",
+        "answer": "We deliver from 09:00 AM to 10:00 PM. Please note that delivery hours may vary slightly during peak times or due to special circumstances."
+      },
+      {
+        "id": 7,
+        "question": "How long does it take for the food to be delivered?",
+        "answer": "Delivery times typically range from 15 to 30 minutes, depending on your location and the traffic conditions. We aim to deliver your food as quickly as possible while maintaining its quality."
+      }
+    ]
+  }
+  
