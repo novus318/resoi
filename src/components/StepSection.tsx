@@ -28,8 +28,8 @@ const StepSection = () => {
   ];
 
   return (
-    <section className="w-full py-20">
-      <div className="w-full mx-auto my-10">
+    <section className="w-full">
+      <div className="w-full mx-auto my-8">
         <h1 className="text-center md:text-[55px] text-[42px] text-primary font-bold">How it works.</h1>
       </div>
       <div className="flex justify-center lg:gap-16 md:gap-10 gap-20 lg:flex-row flex-col items-center">

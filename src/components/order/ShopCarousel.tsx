@@ -26,21 +26,21 @@ function ShopCarousel() {
       >
         <div className="relative">
           <img
-            className=" bg-white h-24 object-cover md:h-64 w-full pointer-events-none"
+            className=" bg-white h-48 object-cover md:h-64 w-full pointer-events-none"
             loading="lazy"
             src="/banner.png"
           />
         </div>
         <div>
           <img
-            className=" bg-white h-24 object-cover md:h-64 w-full"
+            className=" bg-white h-48 object-cover md:h-64 w-full"
             loading="lazy"
            src="/banner.png"
           />
         </div>
         <div>
           <img
-            className=" bg-white h-24 object-cover md:h-64 w-full"
+            className=" bg-white h-48 object-cover md:h-64 w-full"
             loading="lazy"
             src="/banner.png"
           />

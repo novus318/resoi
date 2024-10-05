@@ -26,7 +26,7 @@ const FaqSection = () => {
    <>
     <motion.section
         ref={ref}
-        className="flex flex-col lg:flex-row w-full gap-10 my-32 items-center"
+        className="flex flex-col lg:flex-row w-full gap-10 my-10 items-center"
         initial={{ opacity: 0, y: 50 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.8, ease: 'easeOut' }}
@@ -38,7 +38,7 @@ const FaqSection = () => {
             transition={{ duration: 0.8, ease: 'easeOut', delay: 0.3 }}
           >
             <img
-              src="/img/banner2.svg"
+              src="/img/banner2.png"
               alt="FAQ Image"
               className="object-cover"
             />
@@ -65,12 +65,12 @@ const FaqSection = () => {
       </motion.section>
 
       <motion.section
-        className="w-full mx-auto my-14"
+        className="w-full mx-auto"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.8, ease: 'easeOut', delay: 0.6 }}
       >
-        <div className="w-10/12 md:w-full flex flex-col md:flex-row justify-center mx-auto md:gap-10 gap-3 my-10">
+        <div className="w-10/12 md:w-full flex flex-col md:flex-row justify-center mx-auto md:gap-10 gap-3 my-5">
           <ButtonMenu
             onClick={handleFaqFood}
             className={`${faqFood && 'bg-primary bg-button-wave text-white border-none transition-colors'}`}

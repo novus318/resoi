@@ -7,7 +7,7 @@ import { Button } from './ui/button';
 
 const Herosection = () => {
   return (
-    <section className="bg-white flex flex-col lg:flex-row w-full mt-32 mb-32 md:mb-32 items-center justify-between gap-10">
+    <section className="bg-white flex flex-col lg:flex-row w-full mt-32 md:mb-32 items-center justify-between gap-10">
     <motion.div
       initial={{ opacity: 0, x: -10 }}
       animate={{ opacity: 1, x: 0 }}
@@ -34,7 +34,7 @@ const Herosection = () => {
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.5 }}>
       <Image
-        src="/img/banner.svg"
+        src="/img/banner.png"
         alt="Hero Image"
         width={500}
         height={500}
