@@ -17,7 +17,7 @@ const OrderSection = () => {
     </div>
     <div className="bg-primary lg:w-6/12 w-full lg:px-16 px-3 py-6 flex justify-center flex-col bg-pattern-01 bg-no-repeat bg-contain bg-left-bottom">
     <h1 className="text-white md:text-[55px] text-[44px] font-bold leading-tight">
-  <span className="text-[#000808]">Savor</span> delicious meals Get what you need, when you need it.
+  <span className="text-[#000808]">Savor</span> delicious meals and get what you need, when you need it.
 </h1>
 
       <div className="w-full md:w-6/12">

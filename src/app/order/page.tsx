@@ -5,7 +5,7 @@ import CardSkeleton from '@/components/ui/CardSkeleton';
 import React, { useEffect, useState } from 'react'
 
 const Order = () => {
-    const [sort, setSort] = useState(0);
+ 
     const data_items = [
         {
           "_id": "61190d98cd0bde22e8960771",
@@ -13,10 +13,6 @@ const Order = () => {
           "slug": "chicken-biryani",
           "category": "Biryani",
           "price": "250",
-          "description": "Delicious long-grain basmati rice cooked with tender chicken pieces in flavorful spices.",
-          "published_at": "2023-08-15T12:50:35.569Z",
-          "createdAt": "2023-08-15T12:50:32.330Z",
-          "updatedAt": "2023-08-17T23:49:55.279Z",
           "images": [
          "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_292,h_300/TopPicks2024/107588300B.png"
         ]
@@ -70,7 +66,7 @@ const Order = () => {
       setTimeout(() => setLoading(false), 1000);
     }, []);
   return (
-    <Layout setSort={setSort} >
+    <Layout >
         {!loading ? (
           data_items.length < 1 ? (
             <p className="col-span-full mx-auto text-sm text-gray-400">

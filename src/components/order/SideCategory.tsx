@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 function SideCategory() {
 
@@ -18,7 +18,7 @@ function SideCategory() {
             All products
           </button>
         </li>
-        {typesData.map((type, idx) => (
+        {typesData.map((type) => (
           <li key={type.slug}>
             <button
               className='cursor-pointer'

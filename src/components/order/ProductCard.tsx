@@ -4,8 +4,18 @@ import { motion } from "framer-motion";
 import Router from "next/router";
 import { NumberFormatBase } from "react-number-format";
 
-function ProductCard({ item }:any) {
+interface ProductItem {
+  slug: string;
+  name: string;
+  price: number | string;
+  images: string[];
+}
 
+interface ProductCardProps {
+  item: ProductItem;
+}
+
+const ProductCard: React.FC<ProductCardProps> = ({ item }) => {
   return (
     <div className="rounded-xl cursor-pointer">
       <div className="overflow-hidden cursor-default rounded-xl relative group">
@@ -20,15 +30,13 @@ function ProductCard({ item }:any) {
             objectFit="cover"
             loading="lazy"
             src={item?.images[0]}
-            alt=""
+            alt={item.name}
             className="rounded-xl w-full h-full bg-cusgray"
           />
         </motion.div>
-        <div className="hidden absolute rounded-xl h-full w-full bg-gray-500 backdrop-filter backdrop-blur-sm bg-opacity-30 top-0 group group-hover:flex justify-center place-items-center z-10">
+        <div className="hidden absolute rounded-xl h-full w-full bg-gray-500 backdrop-filter backdrop-blur-sm bg-opacity-30 top-0 group-hover:flex justify-center items-center z-10">
           <div className="flex overflow-hidden cursor-pointer">
-            <button
-              className="p-2 bg-white hover:bg-gray-100 active:bg-gray-200 rounded-lg"
-            >
+            <button className="p-2 bg-white hover:bg-gray-100 active:bg-gray-200 rounded-lg">
               <svg
                 className="w-6 m-auto h-6 text-cusblack"
                 fill="none"
@@ -52,14 +60,12 @@ function ProductCard({ item }:any) {
         className="px-2 py-2"
       >
         <p className="text-sm line-clamp-1">{item.name}</p>
-        <p className="text-xs my-2 text-gray-400">{item.color}</p>
-        {/* <p className="text-sm font-semibold">Rp {price}</p> */}
         <NumberFormatBase
           value={item.price}
           className="text-sm font-semibold text-cusblack"
           displayType={"text"}
-          renderText={(value:any, props:any) => (
-            <p className="text-sm font-semibold" {...props}>
+          renderText={(value) => (
+            <p className="text-sm font-semibold">
               ₹{value}
             </p>
           )}
@@ -67,6 +73,6 @@ function ProductCard({ item }:any) {
       </div>
     </div>
   );
-}
+};
 
 export default ProductCard;

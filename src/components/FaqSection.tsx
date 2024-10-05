@@ -1,5 +1,4 @@
 'use client'
-import Image from 'next/image'
 import React, { useRef, useState } from 'react'
 import ButtonMenu from './ui/ButtonMenu'
 import { XIcon } from 'lucide-react'
@@ -126,7 +125,7 @@ interface FAQProps {
   
     return (
       <div className="w-full mx-auto">
-        {faqs.map((faq:any) => {
+        {faqs.map((faq) => {
           const isExpanded = faq.id === expandedId;
           return (
             <motion.div

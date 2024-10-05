@@ -3,7 +3,13 @@ import ShopCarousel from "./ShopCarousel";
 import SideCategory from "./SideCategory";
 import Navbar from "../Navbar";
 
-function Layout({ children, categories, types, setSort }:any) {
+
+
+interface LayoutProps {
+    children: React.ReactNode;
+  }
+  
+  const Layout: React.FC<LayoutProps> = ({ children }) => {
   const [open, setOpen] = useState(false);
   const [grid, setGrid] = useState(4);
   const [sortOpen, setSortOpen] = useState(false);
@@ -128,10 +134,6 @@ function Layout({ children, categories, types, setSort }:any) {
                       <li className="py-1 px-2 rounded-sm hover:bg-gray-100 active:bg-gray-200">
                         <button
                           className="w-full"
-                          onClick={() => {
-                            setSort(0);
-                            setSortOpen(false);
-                          }}
                         >
                           Newest
                         </button>
@@ -139,10 +141,6 @@ function Layout({ children, categories, types, setSort }:any) {
                       <li className="py-1 px-2 rounded-sm hover:bg-gray-100 active:bg-gray-200">
                         <button
                           className="w-full"
-                          onClick={() => {
-                            setSort(1);
-                            setSortOpen(false);
-                          }}
                         >
                           Price low to high
                         </button>
@@ -150,10 +148,6 @@ function Layout({ children, categories, types, setSort }:any) {
                       <li className="py-1 px-2 rounded-sm hover:bg-gray-100 active:bg-gray-200">
                         <button
                           className="w-full"
-                          onClick={() => {
-                            setSort(2);
-                            setSortOpen(false);
-                          }}
                         >
                           Price high to low
                         </button>
