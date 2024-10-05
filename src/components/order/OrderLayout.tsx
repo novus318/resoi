@@ -12,7 +12,6 @@ interface LayoutProps {
   
   const Layout: React.FC<LayoutProps> = ({ children }) => {
   const [open, setOpen] = useState(false);
-  const [grid, setGrid] = useState(4);
   const [sortOpen, setSortOpen] = useState(false);
   return (
     <div className="w-full min-h-screen bg-cusgray py-10 md:py-16" style={{ backgroundColor: 'rgba(249, 226, 204, 0.30)' }}>
