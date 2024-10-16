@@ -1,93 +1,90 @@
-'use client'
-import Layout from '@/components/order/OrderLayout'
+'use client';
+import Layout from '@/components/order/OrderLayout';
 import ProductCard from '@/components/order/ProductCard';
 import CardSkeleton from '@/components/ui/CardSkeleton';
-import React, { useEffect, useState } from 'react'
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 
-const Order = () => {
- 
-    const data_items = [
-        {
-          "_id": "61190d98cd0bde22e8960771",
-          "name": "Chicken Biryani",
-          "slug": "chicken-biryani",
-          "category": "Biryani",
-          "price": "250",
-          "images": [
-         "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_292,h_300/TopPicks2024/107588300B.png"
-        ]
-        },
-        {
-          "_id": "611a4d38666787300c2e18ff",
-          "name": "Shawarma Roll",
-          "slug": "shawarma-roll",
-          "category": "Wraps",
-          "price": "150",
-          "description": "Juicy grilled chicken wrapped in a soft flatbread with garlic sauce and pickled veggies.",
-          "published_at": "2023-08-16T11:34:19.821Z",
-          "createdAt": "2023-08-16T11:34:16.949Z",
-          "updatedAt": "2023-08-16T11:34:19.951Z",
-          "images": [
-            "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_292,h_300/TopPicks2024/107588300B.png"  ]
-        },
-        {
-          "_id": "611a4d38666787300c2e18fa",
-          "name": "Paneer Tikka",
-          "slug": "paneer-tikka",
-          "category": "Appetizers",
-          "price": "180",
-          "description": "Grilled cottage cheese cubes marinated in tangy spices, served with mint chutney.",
-          "published_at": "2023-08-16T11:34:19.821Z",
-          "createdAt": "2023-08-16T11:34:16.949Z",
-          "updatedAt": "2023-08-16T11:34:19.951Z",
-          "images": [
-            "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_292,h_300/TopPicks2024/107588300B.png"]
-        },
-        {
-          "_id": "611a4d38666787300c2e18fb",
-          "name": "Falafel Platter",
-          "slug": "falafel-platter",
-          "category": "Main Course",
-          "price": "200",
-          "description": "Crispy falafel balls served with hummus, pita bread, and a side of fresh salad.",
-          "published_at": "2023-08-16T11:34:19.821Z",
-          "createdAt": "2023-08-16T11:34:16.949Z",
-          "updatedAt": "2023-08-16T11:34:19.951Z",
-          "images": [
-            "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_292,h_300/TopPicks2024/107588300B.png" ]
-        }
-      ];
-      
-    
-  
-    const [loading, setLoading] = useState(true);
-  
-    useEffect(() => {
-      setTimeout(() => setLoading(false), 1000);
-    }, []);
-  return (
-    <Layout >
-        {!loading ? (
-          data_items.length < 1 ? (
-            <p className="col-span-full mx-auto text-sm text-gray-400">
-              No item found
-            </p>
-          ) : (
-            data_items.map((item) => (
-              <ProductCard key={item.slug} item={item} />
-            ))
-          )
-        ) : (
-          <>
-            <CardSkeleton />
-            <CardSkeleton />
-            <CardSkeleton />
-            <CardSkeleton />
-            <CardSkeleton />
-          </>
-        )}
-      </Layout>
-  )
+type Item ={
+  name: string
+  price: null
+  offer:null,
+  image: File | null
+  description: string
+  ingredients: string[]
+  category:{
+    name: string
+  }
+  subcategory:{
+    name: string
+  }
+  variants: { name: string; price: number; isAvailable: boolean }[]
+  isVeg: boolean
 }
 
-export default Order
+const Order = () => {
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  const [items, setItems] = useState<Item[]>([]);
+  const [loadingItems, setLoadingItems] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  useEffect(() => {
+    fetchItems();
+  }, []);
+
+  const fetchItems = async () => {
+    try {
+      setLoadingItems(true);
+      const response = await axios.get(`${apiUrl}/api/item/get-items`);
+      if (response.data.success) {
+        setItems(response.data.items);
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoadingItems(false);
+    }
+  };
+
+  const filteredItems = items
+    .filter((item) => {
+      const query = searchQuery.toLowerCase();
+      return (
+        item?.name?.toLowerCase().includes(query) ||
+        item?.description?.toLowerCase().includes(query) ||
+        item?.ingredients?.some((ingredient:any) =>
+          ingredient.toLowerCase().includes(query)
+        ) ||
+        item?.category?.name?.toLowerCase().includes(query) ||
+        item?.subcategory?.name?.toLowerCase().includes(query)
+      );
+    })
+
+  return (
+    <Layout searchQuery={searchQuery} setSearchQuery={setSearchQuery}>
+      {!loadingItems ? (
+        filteredItems.length < 1 ? (
+          <p className="col-span-full mx-auto text-sm text-gray-400">
+            No items found
+          </p>
+        ) : (
+          filteredItems.map((item: any) => (
+            <div key={item?._id}>
+              <ProductCard key={item._id} item={item} isSelected={false} />
+            </div>
+          ))
+        )
+      ) : (
+        <>
+          <CardSkeleton />
+          <CardSkeleton />
+          <CardSkeleton />
+          <CardSkeleton />
+          <CardSkeleton />
+        </>
+      )}
+    </Layout>
+  );
+};
+
+export default Order;

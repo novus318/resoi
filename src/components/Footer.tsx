@@ -12,7 +12,7 @@ const Footer = () => {
           <div className="flex gap-3 items-center">
             <img src="/logobell.svg" alt="Logo Footer" className="h-8" />
           </div>
-          <p className="text-paragraf text-base mt-2 text-center md:text-left">
+          <p className="text-paragraf text-base mt-2 text-left">
           Taste the best of Kerala&apos;s culinary delights with dishes like Mandhi, Biriyani, Ghee Rice, Curries, Thali, Shawarma and so on at Malabar Resoi.
           </p>
         </div>

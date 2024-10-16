@@ -2,7 +2,7 @@
 const nextConfig = {
     reactStrictMode: true,
   images: {
-    domains: ['is1-ssl.mzstatic.com','media-assets.swiggy.com'],
+    domains: ['localhost','media-assets.swiggy.com'],
   },
 };
 

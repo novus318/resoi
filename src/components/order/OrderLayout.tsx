@@ -8,9 +8,11 @@ import Search from "./Search";
 
 interface LayoutProps {
     children: React.ReactNode;
+    searchQuery: string;
+    setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
   }
   
-  const Layout: React.FC<LayoutProps> = ({ children }) => {
+  const Layout: React.FC<LayoutProps> = ({ children,searchQuery,setSearchQuery }) => {
   const [open, setOpen] = useState(false);
   const [sortOpen, setSortOpen] = useState(false);
   return (
@@ -51,7 +53,7 @@ interface LayoutProps {
             <div className="rounded-2xl overflow-hidden shadow-lg w-full bg-white mt-6 px-5 py-4">
               <div className="mb-3">
                 <div className="flex justify-between place-items-center text-gray-600 text-sm relative gap-2">
-                <Search/>
+                <Search searchQuery={searchQuery} setSearchQuery={setSearchQuery}/>
                   <button
                     onClick={() => setSortOpen(!sortOpen)}
                     className="flex place-items-center hover:bg-gray-100 py-1 px-2 rounded-md active:bg-gray-200"

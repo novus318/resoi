@@ -1,18 +1,18 @@
 'use client';
-import React, { useState, ChangeEvent } from 'react';
+import React from 'react';
 
-const Search: React.FC = () => {
-  const [input, setInput] = useState<string>('');
 
-  const handleChange = async (e: ChangeEvent<HTMLInputElement>) => {
-    setInput(e.target.value);
-  };
+type Search ={
+  searchQuery: string;
+  setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
+}
+const Search = ({searchQuery,setSearchQuery}:Search) => {
 
   return (
     <div className="max-w-4xl flex relative group md:ml-auto justify-between pr-4 place-items-center flex-grow h-full rounded-3xl bg-white border">
       <input
-        value={input}
-        onChange={handleChange}
+      value={searchQuery}
+     onChange={(e) => setSearchQuery(e.target.value)}
         className="text-xs group pl-4 rounded-3xl p-2.5 focus:outline-none w-full text-cusblack"
         type="text"
         placeholder="Search item"
