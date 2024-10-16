@@ -3,50 +3,44 @@ import ShopCarousel from "./ShopCarousel";
 import SideCategory from "./SideCategory";
 import Navbar from "../Navbar";
 import Search from "./Search";
+import { Filter} from "lucide-react";
+import { Button } from "../ui/button";
 
 
 
 interface LayoutProps {
     children: React.ReactNode;
+    items: any[];
     searchQuery: string;
     setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
+    selectedCategory: string;
+    setSelectedCategory: React.Dispatch<React.SetStateAction<string>>;
+    sortOrder: string;
+    setSortOrder: React.Dispatch<React.SetStateAction<string>>;
   }
   
-  const Layout: React.FC<LayoutProps> = ({ children,searchQuery,setSearchQuery }) => {
+  const Layout: React.FC<LayoutProps> = ({ children,items,searchQuery,setSearchQuery,selectedCategory,setSelectedCategory,sortOrder,setSortOrder }) => {
   const [open, setOpen] = useState(false);
   const [sortOpen, setSortOpen] = useState(false);
   return (
     <div className="w-full min-h-screen bg-cusgray py-10 md:py-16" style={{ backgroundColor: 'rgba(249, 226, 204, 0.30)' }}>
       <Navbar />
     
-      <button
+      <Button
         onClick={() => setOpen(!open)}
-        className="w-12 h-12 rounded-full bg-white fixed z-30 drop-shadow-2xl lg:hidden flex justify-center place-items-center bottom-0 left-0 m-5"
+        className="w-12 h-12 rounded-full fixed z-30 drop-shadow-2xl lg:hidden flex justify-center place-items-center bottom-0 left-0 m-5"
       >
-        <svg
-          className="w-6 text-cusblack h-6"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"
-          />
-        </svg>
-      </button>
+       <Filter/>
+      </Button>
       <div className="max-w-6xl mx-auto pt-14 md:px-0">
         <div className="grid grid-cols-4 gap-x-6">
           <div
             onClick={() => setOpen(!open)}
             className={`${
               open ? `fixed` : `hidden`
-            } lg:static lg:inline lg:bg-cusgray h-screen bg-opacity-30 z-20 flex w-full justify-center place-items-center top-0 lg:p-4`}
+            } lg:static lg:inline lg:bg-cusgray h-screen bg-opacity-30 z-20 flex w-full justify-center place-items-center top-0 lg:p-4 bg-orange-100`}
           >
-            <SideCategory />
+            <SideCategory items={items} selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} />
           </div>
           <div className="col-span-4 md:col-span-4 lg:col-span-3 flex flex-col py-4 mx-2 md:mx-0">
             <ShopCarousel />
@@ -90,34 +84,43 @@ interface LayoutProps {
                   </button>
 
                   <div
-                    className={`${
-                      sortOpen ? "absolute" : "hidden"
-                    } top-7 shadow-lg rounded-md text-sm right-0 bg-white text-gray-500 z-20 px-2 py-2`}
-                  >
-                    <ul>
-                      <li className="py-1 px-2 rounded-sm hover:bg-gray-100 active:bg-gray-200">
-                        <button
-                          className="w-full"
-                        >
-                          Newest
-                        </button>
-                      </li>
-                      <li className="py-1 px-2 rounded-sm hover:bg-gray-100 active:bg-gray-200">
-                        <button
-                          className="w-full"
-                        >
-                          Price low to high
-                        </button>
-                      </li>
-                      <li className="py-1 px-2 rounded-sm hover:bg-gray-100 active:bg-gray-200">
-                        <button
-                          className="w-full"
-                        >
-                          Price high to low
-                        </button>
-                      </li>
-                    </ul>
-                  </div>
+          className={`${
+            sortOpen ? 'absolute' : 'hidden'
+          } top-7 shadow-lg rounded-md text-sm right-0 bg-white text-gray-500 z-20 px-2 py-2`}
+        >
+          <ul>
+            <li
+              className={`py-1 px-2 rounded-sm hover:bg-gray-100 active:bg-gray-200 ${
+                sortOrder === 'lowToHigh' ? 'bg-gray-100 font-semibold text-gray-800' : ''
+              }`}
+            >
+              <button
+                className="w-full"
+                onClick={() => {
+                  setSortOrder('lowToHigh');
+                  setSortOpen(false);
+                }}
+              >
+                Price low to high
+              </button>
+            </li>
+            <li
+              className={`py-1 px-2 rounded-sm hover:bg-gray-100 active:bg-gray-200 ${
+                sortOrder === 'highToLow' ? 'bg-gray-100 font-semibold text-gray-800' : ''
+              }`}
+            >
+              <button
+                className="w-full"
+                onClick={() => {
+                  setSortOrder('highToLow');
+                  setSortOpen(false);
+                }}
+              >
+                Price high to low
+              </button>
+            </li>
+          </ul>
+        </div>
                 </div>
               </div>
               <div

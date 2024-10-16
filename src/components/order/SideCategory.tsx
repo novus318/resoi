@@ -1,30 +1,41 @@
-'use client'
-import React from "react";
+'use client';
+import React from 'react';
+import { Button } from '../ui/button';
 
-function SideCategory() {
+interface LayoutProps {
+  items: any[];
+  selectedCategory: string;
+  setSelectedCategory: React.Dispatch<React.SetStateAction<string>>;
+}
 
-  const typesData = [{
-    name: "Men",
-    slug: "men",
-  }];
+function SideCategory({ items, selectedCategory, setSelectedCategory }: LayoutProps) {
   return (
-    <div className=" rounded-3xl px-5 py-6 shadow-lg w-2/3 md:w-1/2 lg:w-auto bg-white">
-      <h3 className="font-semibold mb-3 text-lg text-cusblack">Categories</h3>
-      <ul className="leading-10 text-xs">
+    <div className="rounded-3xl px-5 py-4 shadow-lg w-2/3 md:w-1/2 lg:w-auto bg-white">
+      <h3 className="font-semibold mb-2 text-lg text-cusblack">Categories</h3>
+      <ul className="leading-9 text-xs">
+        {/* 'All' option */}
         <li>
-          <button
-            className='cursor-pointer'
+          <Button size='sm' variant='ghost'
+            className={`cursor-pointer ${
+              selectedCategory === 'All' ? 'bg-orange-100 text-secondary-foreground w-full font-bold' : 'bg-secondary-foreground text-orange-100 font-bold w-full'
+            }`}
+            onClick={() => setSelectedCategory('All')}
           >
-            All products
-          </button>
+            All
+          </Button>
         </li>
-        {typesData.map((type) => (
-          <li key={type.slug}>
-            <button
-              className='cursor-pointer'
+
+        {/* Dynamically render category list */}
+        {Array.from(new Set(items.map((item: any) => item.category.name))).map((category) => (
+          <li key={category}>
+            <Button size='sm' variant='ghost'
+              className={`cursor-pointer ${
+                selectedCategory === category ? 'bg-orange-100 text-secondary-foreground w-full font-bold' : 'bg-secondary-foreground text-orange-100 font-bold w-full'
+              }`}
+              onClick={() => setSelectedCategory(category)}
             >
-              {type.name}
-            </button>
+              {category}
+            </Button>
           </li>
         ))}
       </ul>
