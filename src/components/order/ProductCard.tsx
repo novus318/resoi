@@ -6,6 +6,7 @@ import { Badge } from "../ui/badge";
 
 const ProductCard = ({ item }:any) => {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  const imageUrl=`${apiUrl}${item?.image}`
   return (
     <div className="rounded-xl cursor-pointer">
     <div className="overflow-hidden cursor-default rounded-xl relative group">
@@ -14,13 +15,14 @@ const ProductCard = ({ item }:any) => {
           animate={{ scale: 1, x: 0, opacity: 1 }}
           transition={{ delay: 0.2 }}
         className="aspect-w-1 aspect-h-1 w-full">
-       <img
+        <Image
           height={700}
           width={700}
-          src={`${apiUrl}${item?.image}`}
+          objectFit="cover"
+          priority
+          src={imageUrl}
           alt='product'
-          aria-label='product image'
-          className="rounded-xl w-full h-full bg-cusgray object-cover"
+          className="rounded-xl h-36 object-cover"
         />
         {/* Offer Badge */}
         {item?.offer > 0 && (
