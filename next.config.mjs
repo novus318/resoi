@@ -2,7 +2,7 @@
 const nextConfig = {
     reactStrictMode: true,
   images: {
-    domains: ['localhost','media-assets.swiggy.com'],
+    domains: ['localhost','media-assets.swiggy.com','resoi-server.vercel.app'],
   },
 };
 
