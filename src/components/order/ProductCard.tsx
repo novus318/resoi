@@ -14,14 +14,13 @@ const ProductCard = ({ item }:any) => {
           animate={{ scale: 1, x: 0, opacity: 1 }}
           transition={{ delay: 0.2 }}
         className="aspect-w-1 aspect-h-1 w-full">
-        <Image
+       <img
           height={700}
           width={700}
-          objectFit="cover"
-          priority
           src={`${apiUrl}${item?.image}`}
           alt='product'
-          className="rounded-xl h-36 object-cover"
+          aria-label='product image'
+          className="rounded-xl w-full h-full bg-cusgray object-cover"
         />
         {/* Offer Badge */}
         {item?.offer > 0 && (
