@@ -28,7 +28,7 @@ interface LayoutProps {
     
       <Button
         onClick={() => setOpen(!open)}
-        className="w-12 h-12 rounded-full fixed z-30 drop-shadow-2xl lg:hidden flex justify-center place-items-center bottom-0 left-0 m-5"
+        className="w-12 h-12 rounded-full fixed z-30 drop-shadow-2xl lg:hidden flex justify-center place-items-center bottom-10 left-0 m-2"
       >
        <Filter/>
       </Button>
@@ -38,7 +38,7 @@ interface LayoutProps {
             onClick={() => setOpen(!open)}
             className={`${
               open ? `fixed` : `hidden`
-            } lg:static lg:inline lg:bg-cusgray h-screen bg-opacity-30 z-20 flex w-full justify-center place-items-center top-0 lg:p-4 bg-orange-100`}
+            } lg:static lg:inline lg:bg-cusgray h-screen bg-opacity-30 z-20 flex w-full justify-center place-items-center top-0 lg:p-4 bg-orange-100 md:bg-transparent`}
           >
             <SideCategory items={items} selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} />
           </div>

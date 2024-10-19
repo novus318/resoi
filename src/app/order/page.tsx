@@ -1,9 +1,11 @@
 'use client';
+import Cart from '@/components/order/Cart';
 import Layout from '@/components/order/OrderLayout';
 import ProductCard from '@/components/order/ProductCard';
 import CardSkeleton from '@/components/ui/CardSkeleton';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 
 type Item = {
   _id:string
@@ -29,7 +31,8 @@ const Order = () => {
   const [loadingItems, setLoadingItems] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
-  const [sortOrder, setSortOrder] = useState<string>(''); // 'lowToHigh' or 'highToLow'
+  const [sortOrder, setSortOrder] = useState<string>('');
+const cart = useSelector((state: any) => state.cart.items);
 
   useEffect(() => {
     fetchItems();
@@ -85,6 +88,7 @@ const Order = () => {
       return 0;
     });
 
+    
   return (
     <Layout
     items={items}
@@ -114,6 +118,8 @@ const Order = () => {
           <CardSkeleton />
         </>
       )}
+     {cart.length > 0 && 
+      <Cart/>}
     </Layout>
   );
 };
