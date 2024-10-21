@@ -1,4 +1,4 @@
-import Image from 'next/image'
+import Image from "next/legacy/image"
 import Link from 'next/link'
 import React from 'react'
 
@@ -6,12 +6,9 @@ const OrderSection = () => {
   return (
     <section className="w-full h-[800px] lg:h-[600px] flex lg:flex-row flex-col my-16 gap-5">
     <div className="lg:w-6/12 w-full h-full relative">
-      <Image
+      <img
         src="/img/group.svg"
         alt="Order Image"
-        quality={100}
-        fill
-        priority
         className="w-auto h-auto object-cover object-center"
       />
     </div>

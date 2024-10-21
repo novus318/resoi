@@ -11,32 +11,42 @@ import { Button } from '@/components/ui/button';
 import { MinusIcon, PlusIcon, ShoppingBag, Trash2Icon } from 'lucide-react';
 import {
     Drawer,
-    DrawerClose,
     DrawerContent,
-    DrawerDescription,
-    DrawerFooter,
-    DrawerHeader,
     DrawerTitle,
     DrawerTrigger,
 } from "@/components/ui/drawer"
-import { useMediaQuery } from 'react-responsive';
+import { useRouter } from 'next/navigation';
+
 
 const Cart = () => {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL;
     const dispatch = useDispatch();
     const cartItems = useSelector((state: any) => state.cart.items);
-    const isDesktop = useMediaQuery({ query: '(min-width: 768px)' });
+    const router=useRouter()
 
-    const handleRemove = (id: string) => {
-        dispatch(removeFromCart(id));
+    
+    const handleRemove = (item:any) => {
+       const data:any={
+            _id:item._id,
+            variant:item.variant
+        }
+        dispatch(removeFromCart(data));
     };
 
-    const handleIncrement = (id: string) => {
-        dispatch(incrementQuantity(id));
+    const handleIncrement = (item: any) => {
+        const data:any={
+            _id:item._id,
+            variant:item.variant
+        }
+        dispatch(incrementQuantity(data));
     };
 
-    const handleDecrement = (id: string) => {
-        dispatch(decrementQuantity(id));
+    const handleDecrement = (item:any) => {
+        const data:any={
+            _id:item._id,
+            variant:item.variant
+        }
+        dispatch(decrementQuantity(data));
     };
 
     const calculateTotal = () => {
@@ -64,16 +74,17 @@ const Cart = () => {
             </DrawerTrigger>
             <DrawerContent>
                 <div className="mx-auto w-full max-w-sm p-2">
-                    <h2 className="text-xl font-bold mb-4">Your Cart</h2>
-
+                <DrawerTitle className='mb-2'>
+                Your Cart
+                </DrawerTitle>
                     {cartItems.length === 0 ? (
                         <p>Your cart is empty.</p>
                     ) : (
                         <>
                             <div className="space-y-4">
-                                {cartItems.map((item: any) => (
+                                {cartItems.map((item: any,i:any) => (
                                     <div
-                                        key={item._id}
+                                        key={i}
                                         className="flex items-center justify-between border p-3 rounded-lg bg-white shadow-sm"
                                     >
                                         <div className="flex items-center space-x-3">
@@ -112,7 +123,7 @@ const Cart = () => {
                                             {/* Quantity Control */}
                                             <Button
                                                 size="icon"
-                                                onClick={() => handleDecrement(item._id)}
+                                                onClick={() => handleDecrement(item)}
                                                 className="bg-gray-200"
                                             >
                                                 <MinusIcon className="h-4 w-4" />
@@ -121,7 +132,7 @@ const Cart = () => {
                                             <span className="w-8 text-center">{item.quantity}</span>
                                             <Button
                                                 size="icon"
-                                                onClick={() => handleIncrement(item._id)}
+                                                onClick={() => handleIncrement(item)}
                                                 className="bg-gray-200"
                                             >
                                                 <PlusIcon className="h-4 w-4" />
@@ -132,7 +143,7 @@ const Cart = () => {
                                             <Button
                                                 size="icon"
                                                 variant="destructive"
-                                                onClick={() => handleRemove(item._id)}
+                                                onClick={() => handleRemove(item)}
                                             >
                                                 <Trash2Icon className="h-4 w-4" />
                                                 <span className="sr-only">Remove item</span>
@@ -149,7 +160,7 @@ const Cart = () => {
                             </div>
 
                             {/* Checkout Button */}
-                            <Button className="mt-4 w-full">Proceed to Checkout</Button>
+                            <Button className="mt-4 w-full" onClick={()=> router.push('/checkout')}>Proceed to Checkout</Button>
                         </>
                     )}
                 </div>

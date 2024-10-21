@@ -1,6 +1,6 @@
 'use client'
 import React from "react";
-import Image from "next/image";
+import Image from "next/legacy/image";
 import { motion } from "framer-motion";
 import { formatCurrency } from "@/lib/currencyFormat";
 import { Badge } from "../ui/badge";
@@ -14,6 +14,7 @@ const ProductCard = ({ item }: any) => {
 
   return (
     <div className="rounded-xl cursor-pointer">
+        <AddtoCart item={item}>
       <div className="overflow-hidden cursor-default rounded-xl relative group">
         <motion.div
           initial={{ scale: 1.3, x: 50, opacity: 0 }}
@@ -34,9 +35,9 @@ const ProductCard = ({ item }: any) => {
               {item.offer}% OFF
             </Badge>
           )}
-       <AddtoCart item={item}/>
         </motion.div>
       </div>
+      </AddtoCart>
       <div className="px-2 py-2">
         <p className="text-sm line-clamp-1">{item?.name}</p>
         <div className="text-sm font-semibold text-cusblack">

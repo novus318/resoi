@@ -3,6 +3,7 @@ import Cart from '@/components/order/Cart';
 import Layout from '@/components/order/OrderLayout';
 import ProductCard from '@/components/order/ProductCard';
 import CardSkeleton from '@/components/ui/CardSkeleton';
+import { withAuth } from '@/components/withAuth';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -124,4 +125,4 @@ const cart = useSelector((state: any) => state.cart.items);
   );
 };
 
-export default Order;
+export default withAuth(Order);

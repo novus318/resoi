@@ -49,9 +49,10 @@ type Item = {
 
 type AddToCartProps = {
   item: Item;
+  children: React.ReactNode;
 };
 
-const AddtoCart: React.FC<AddToCartProps> = ({ item }) => {
+const AddtoCart: React.FC<AddToCartProps> = ({ item,children }) => {
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const isDesktop = useMediaQuery({ query: "(min-width: 768px)" });
@@ -76,11 +77,6 @@ const AddtoCart: React.FC<AddToCartProps> = ({ item }) => {
     };
     dispatch(addToCart(data));
     setQuantity(1)
-    toast({
-      title:'Added',
-      description: `Added ${item.name} to your cart`,
-      variant:'default'
-    })
     setOpen(false);
   };
 
@@ -206,12 +202,15 @@ const AddtoCart: React.FC<AddToCartProps> = ({ item }) => {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
+          <div>
+            {children}
           <Button
             size='sm'
-            className="absolute bottom-2 right-2 text-xs h-6 px-2 font-extrabold tracking-wide"
+            className="relative bottom-9 left-2 text-xs h-6 px-2 font-extrabold tracking-wide"
           >
             Add
           </Button>
+          </div>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <CartContent />
