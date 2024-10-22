@@ -6,19 +6,22 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Separator } from "@/components/ui/separator";
 import { useDispatch, useSelector } from 'react-redux';
 import { GoogleMap, LoadScript, Marker, Autocomplete } from '@react-google-maps/api';
-import { decrementQuantity, incrementQuantity, removeFromCart } from '@/store/cartSlice';
+import { clearCart, decrementQuantity, incrementQuantity, removeFromCart } from '@/store/cartSlice';
 import { formatCurrency } from '@/lib/currencyFormat';
 import { Input } from '@/components/ui/input';
 import Navbar from '@/components/Navbar';
 import { withAuth } from '@/components/withAuth';
 import axios from 'axios';
 import { toast } from '@/hooks/use-toast';
+import { useRouter } from 'next/navigation';
+
 
 const Checkout = () => {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  const router =useRouter()
   const dispatch = useDispatch();
   const cartItems = useSelector((state: any) => state.cart.items);
-  const [paymentMethod, setPaymentMethod] = useState('online');
+  const [paymentMethod, setPaymentMethod] = useState('cod');
   const [map, setMap] = useState<any>(null);
   const [address, setAddress] = useState('');
   const [coordinates, setCoordinates] = useState({ lat: 12.1024, lng: 75.2024 });
@@ -26,6 +29,7 @@ const Checkout = () => {
   const geocoderRef = useRef<any>(null);
   const [isEditingAddress, setIsEditingAddress] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [reloadKey, setReloadKey] = useState(0);
 
 
   const handleMapLoad = (map: any) => {
@@ -33,6 +37,15 @@ const Checkout = () => {
     geocoderRef.current = new window.google.maps.Geocoder();
   };
 
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      if (!map) {
+        setReloadKey(prevKey => prevKey + 1); // Trigger map reload by updating key
+      }
+    }, 300);
+
+    return () => clearTimeout(timeoutId); // Clean up timeout on unmount or success
+  }, [map]);
   // Handle marker drag and update coordinates and address
   const handleMarkerDragEnd = async (e: any) => {
     const newCoordinates = {
@@ -148,28 +161,42 @@ const Checkout = () => {
         cartItems,
         totalAmount: calculateTotal(),
       };
-  
-      // Send order request
+
+      if(paymentMethod === 'cod'){
+        const response = await axios.post(`${apiUrl}/api/online/create/order`, orderDetails);
+        if (response.data.success) {
+          dispatch(clearCart());
+          toast({
+            title: 'Order placed successfully!',
+            variant: 'default'
+          });
+          router.push(`/order-success/${response.data.order.orderId}`)
+        }
+      }else{
       const response = await axios.post(`${apiUrl}/api/online/create/order`, orderDetails);
-  
       if (response.data.success) {
         toast({
           title: 'Order placed successfully!',
           variant: 'default'
         });
-        console.log('Order Details:', orderDetails);
+        console.log(response.data)
+        // router.push(`/order-success/${response.data.order.orderId}`)
       }
+    }
     } catch (error:any) {
       toast({
         title: 'An error occurred while placing the order.',
-        description: error.message,
+        description: error.response?.data?.message || error.message || 'Something went wrong',
         variant: 'destructive'
       });
     } finally {
       setLoading(false);
     }
   };
-  
+
+  if(cartItems.length < 1){
+    router.push('/order')
+  }
 
   return (
     <>
@@ -274,6 +301,7 @@ const Checkout = () => {
               <LoadScript
                 googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ''}
                 libraries={['places']}
+                key={reloadKey}
               >
                 <div className="autocomplete-input mb-2">
                   <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}>
@@ -296,7 +324,7 @@ const Checkout = () => {
 
                 <GoogleMap
                   center={coordinates}
-                  zoom={13}
+                  zoom={14}
                   mapContainerStyle={{ width: '100%', height: '300px' }}
                   options={{
                     disableDefaultUI: true, // Removes default controls like zoom, map type, etc.
@@ -306,7 +334,7 @@ const Checkout = () => {
                     draggable: isEditingAddress, // Disable map dragging if not editing
                     scrollwheel: isEditingAddress, // Disable scroll zoom if not editing
                   }}
-                  onLoad={handleMapLoad}
+                  onLoad={handleMapLoad}     
                 >
                   <Marker
                     position={coordinates}
@@ -333,10 +361,12 @@ const Checkout = () => {
 
               <div className="mt-4">
                 <h2 className="font-semibold mb-2">Payment Method</h2>
+                <p className='text-destructive text-xs font-bold'>*Note: Online payments are under maintainance</p>
                 <div className="flex space-x-4">
                   <Button
                     variant={paymentMethod === 'online' ? 'default' : 'outline'}
                     onClick={() => setPaymentMethod('online')}
+                    disabled
                     className="w-full"
                   >
                     Online Payment
