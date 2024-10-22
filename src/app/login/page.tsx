@@ -1,6 +1,6 @@
 'use client'
 import { toast } from '@/hooks/use-toast';
-import { sendOtp } from '@/utils/sendOtp';
+import { sendOtp, sendtextOtp } from '@/utils/sendOtp';
 import React, { useEffect, useRef, useState } from 'react';
 import {
   InputOTP,
@@ -55,7 +55,8 @@ const Login = () => {
       userNumber,
     };
 
-    const otpSentStatus = true
+    const otpSentStatus = await sendtextOtp(generatedOtp,
+      userNumber)
     setOtpSent(otpSentStatus);
   };
 

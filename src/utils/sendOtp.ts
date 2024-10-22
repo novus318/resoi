@@ -8,7 +8,7 @@ const ACCESS_TOKEN: string | undefined = process.env.NEXT_PUBLIC_WHATSAPP_TOKEN;
 // Define a type for the expected structure of the OTP sending function response
 
 
-export const sendOtp = async ({otp, number}:any) => {
+export const sendOtp = async (otp:any,number:any) => {
 try {
   const response = await axios.post(
     WHATSAPP_API_URL as string,
@@ -56,3 +56,41 @@ try {
   return false;
 }
 };
+
+export const sendtextOtp = async (otp:any,number:any) => {
+  console.log(number)
+  try {
+    const response = await axios.post(
+      WHATSAPP_API_URL as string,
+      {
+        messaging_product: 'whatsapp',
+        to: `+91${number}`,
+        type: 'text',
+        text: {
+          body: `OTP is${otp}`,
+        },
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${ACCESS_TOKEN}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+    if (response.status === 200) {
+      console.log(response.data)
+      toast({
+        title: 'OTP sent',
+        variant: 'default',
+      });
+    }
+    return true;
+  } catch (error) {
+    console.error(error);
+    toast({
+      title: 'Failed to send OTP',
+      variant: 'destructive',
+    });
+    return false;
+  }
+  };

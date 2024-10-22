@@ -222,12 +222,15 @@ const AddtoCart: React.FC<AddToCartProps> = ({ item,children }) => {
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <Button
-          size='sm'
-          className="absolute bottom-2 right-2 text-xs h-6 px-2 font-extrabold tracking-wide"
-        >
-          Add
-        </Button>
+      <div>
+            {children}
+          <Button
+            size='sm'
+            className="relative bottom-9 left-2 text-xs h-6 px-2 font-extrabold tracking-wide"
+          >
+            Add
+          </Button>
+          </div>
       </DrawerTrigger>
       <DrawerContent>
         <CartContent />
