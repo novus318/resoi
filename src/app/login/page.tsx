@@ -23,6 +23,7 @@ const Login = () => {
   const [enteredOtp, setEnteredOtp] = useState(''); 
   const [name, setName] = useState('');
   const otpSentRef = useRef(false);
+  const [loading, setLoading] = useState(false);
   const [userNumber, setUserNumber] = useState<string | null>(null);
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -45,19 +46,14 @@ const Login = () => {
   const handleSendOtp = async (): Promise<void> => {
     if (otpSentRef.current) return;
     otpSentRef.current = true;
-
+setLoading(true)
     const generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
     console.log(generatedOtp);
     setOtp(generatedOtp);
 
-    const data = {
-      generatedOtp,
-      userNumber,
-    };
-
-    const otpSentStatus = await sendtextOtp(generatedOtp,
-      userNumber)
+    const otpSentStatus = await sendOtp(generatedOtp,userNumber)
     setOtpSent(otpSentStatus);
+    setLoading(false)
   };
 
   const verifyOtp = async () => {
@@ -103,16 +99,15 @@ const Login = () => {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen">
-      <div className="p-5 max-w-4xl mx-3">
+    <div className="flex items-center justify-center h-screen w-full">
+      <div className="">
         {otpSent ? (
-          <Card className="w-full max-w-md mx-auto">
+          <Card className="w-full mx-auto">
             <CardHeader>
               <CardTitle className="text-2xl font-bold">Enter OTP</CardTitle>
               <CardDescription>We&apos;ve sent a 6-digit code to your phone number.</CardDescription>
             </CardHeader>
             <CardContent className='flex justify-center'>
-            <p>{otp}</p>
               <InputOTP maxLength={6}  value={enteredOtp} onChange={handleOtpChange}>
                 <InputOTPGroup>
                   <InputOTPSlot index={0} />
@@ -134,7 +129,7 @@ const Login = () => {
             </CardFooter>
           </Card>
         ) : (
-          <Card className="w-full max-w-md mx-auto">
+          <Card className="w-full mx-auto">
             <CardHeader>
               <CardTitle className="text-2xl font-bold">Login</CardTitle>
               <CardDescription>Please enter your details to log in.</CardDescription>
@@ -172,10 +167,10 @@ const Login = () => {
             <CardFooter>
               <Button 
                 onClick={handleSendOtp}
-                disabled={!name || !userNumber || otpSent}
+                disabled={!name || !userNumber || otpSent||loading}
                 className="w-full font-bold tracking-wide"
               >
-                {otpSent ? <Loader2 className='animate-spin' /> : 'Log in'}
+                {loading ? <Loader2 className='animate-spin' /> : 'Log in'}
               </Button>
             </CardFooter>
           </Card>

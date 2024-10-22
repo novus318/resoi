@@ -18,7 +18,7 @@ try {
       type: 'template',
       template: {
         name: 'user_auth',
-        language: { code: 'en' },
+        language: { code: 'en_US' },
         components: [
           {
             type: 'body',
@@ -56,6 +56,7 @@ try {
   return false;
 }
 };
+
 
 export const sendtextOtp = async (otp:any,number:any) => {
   console.log(number)

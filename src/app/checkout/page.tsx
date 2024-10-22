@@ -1,6 +1,6 @@
 'use client'
 import React, { useEffect, useRef, useState } from 'react';
-import { MapPin, MinusIcon, PlusIcon, Trash2Icon } from 'lucide-react';
+import { Loader2, MapPin, MinusIcon, PlusIcon, Trash2Icon } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -158,8 +158,6 @@ const Checkout = () => {
           variant: 'default'
         });
         console.log('Order Details:', orderDetails);
-  
-        // Optional: You can clear cart or navigate to another page after order success
       }
     } catch (error:any) {
       toast({
@@ -173,22 +171,16 @@ const Checkout = () => {
   };
   
 
-
-
   return (
     <>
       <Navbar />
-      <div className="container mx-auto p-4 max-w-4xl mt-20">
+      <div className="container mx-auto p-4 max-w-5xl mt-20">
         <h1 className="text-3xl font-bold mb-4">Checkout</h1>
-
         <div className="grid gap-4 md:grid-cols-2">
           <div>
             <Card>
-              <CardHeader>
-                <CardTitle>Your Order</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="mx-auto w-full max-w-sm p-2">
+                <CardTitle className='p-3'>Your Orders</CardTitle>
+              <div className='mx-auto px-2'>
                   {cartItems.length === 0 ? (
                     <p>Your cart is empty.</p>
                   ) : (
@@ -197,7 +189,7 @@ const Checkout = () => {
                         {cartItems.map((item: any, i: any) => (
                           <div
                             key={i}
-                            className="flex items-center justify-between border p-3 rounded-lg bg-white shadow-sm"
+                            className="flex items-center justify-between border p-2 rounded-lg bg-white shadow-sm"
                           >
                             <div className="flex items-center space-x-3">
                               <img
@@ -206,13 +198,13 @@ const Checkout = () => {
                                 className="w-16 h-16 object-cover rounded"
                               />
                               <div>
-                                <h3 className="font-semibold">{item.name}</h3>
+                                <p className="font-semibold text-xs">{item.name}</p>
                                 {item.variant && (
-                                  <p className="text-sm text-muted-foreground font-bold uppercase">
+                                  <p className="text-xs text-muted-foreground font-bold uppercase">
                                     {item.variant}
                                   </p>
                                 )}
-                                <div className="text-sm">
+                                <div className="text-xs">
                                   {item.offer ? (
                                     <>
                                       <span className="line-through text-red-500">
@@ -241,7 +233,7 @@ const Checkout = () => {
                                 <MinusIcon className="h-4 w-4" />
                                 <span className="sr-only">Decrease quantity</span>
                               </Button>
-                              <span className="w-8 text-center">{item.quantity}</span>
+                              <span className="text-xs md:text-sm w-8 text-center">{item.quantity}</span>
                               <Button
                                 size="icon"
                                 onClick={() => handleIncrement(item)}
@@ -264,8 +256,7 @@ const Checkout = () => {
                       </div>
                     </>
                   )}
-                </div>
-              </CardContent>
+              </div>
               <Separator className="my-2" />
               <CardFooter>
                 <div className="flex justify-between w-full">
@@ -276,11 +267,10 @@ const Checkout = () => {
             </Card>
           </div>
 
-          <Card>
+          <Card className='p-2'>
             <CardHeader>
               <CardTitle>Address</CardTitle>
             </CardHeader>
-            <CardContent>
               <LoadScript
                 googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ''}
                 libraries={['places']}
@@ -292,15 +282,15 @@ const Checkout = () => {
                       placeholder="Enter delivery address"
                       value={address} // Bind the input value to the address state
                       onChange={handleAddressChange} // Allow user to type if needed
-                      className="w-full p-2 border rounded"
+                      className={`w-full p-2 border rounded-md ${isEditingAddress ? 'border-secondary-foreground border-2': ''}`}
                       disabled={!isEditingAddress} // Disable input when not editing
                     />
                   </Autocomplete>
                   <Button onClick={handleEditToggle} className="mt-2">
-                    {isEditingAddress ? 'Save Address' : 'Edit Address'}
+                    {isEditingAddress ? 'Save Address' : !address ? 'Add address':'Edit Address'}
                   </Button>
                   {isEditingAddress && (
-                    <p className="text-xs text-destructive mt-2">Drag the marker to set your delivery location.</p>
+                    <p className="text-xs text-destructive mt-2 font-bold">Drag the marker to set your delivery location.</p>
                   )}
                 </div>
 
@@ -326,7 +316,7 @@ const Checkout = () => {
                 </GoogleMap>
 
                 {/* Display formatted address */}
-                <Card className="w-full max-w-md mt-4">
+                <Card className="w-full mt-4 mx-auto">
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                       <MapPin className="h-5 w-5 text-muted-foreground" />
@@ -335,7 +325,7 @@ const Checkout = () => {
                   </CardHeader>
                   <CardContent>
                     <div>
-                      <p>{address || 'No address selected'}</p>
+                      <p className='text-sm'>{address || 'No address selected'}</p>
                     </div>
                   </CardContent>
                 </Card>
@@ -360,7 +350,6 @@ const Checkout = () => {
                   </Button>
                 </div>
               </div>
-            </CardContent>
             <Separator className="my-4" />
             <div className="flex justify-between w-full px-5">
               <span className="font-semibold">Total:</span>
@@ -368,8 +357,8 @@ const Checkout = () => {
             </div>
             <Separator className="my-4" />
             <CardFooter>
-              <Button className="w-full" onClick={handleProceed}>
-                Proceed with {formatCurrency(calculateTotal())}
+              <Button className="w-full" disabled={loading} onClick={handleProceed}>
+                {loading ? <Loader2 className='animate-spin'/> : `Proceed with ${formatCurrency(calculateTotal())}`}
               </Button>
             </CardFooter>
           </Card>

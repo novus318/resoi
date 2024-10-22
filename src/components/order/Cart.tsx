@@ -83,73 +83,71 @@ const Cart = () => {
                         <>
                             <div className="space-y-4">
                                 {cartItems.map((item: any,i:any) => (
-                                    <div
-                                        key={i}
-                                        className="flex items-center justify-between border p-3 rounded-lg bg-white shadow-sm"
-                                    >
-                                        <div className="flex items-center space-x-3">
-                                            <img
-                                                src={`${apiUrl}${item?.image}`}
-                                                alt={item.name}
-                                                className="w-16 h-16 object-cover rounded"
-                                            />
-                                            <div>
-                                                <h3 className="font-semibold">{item.name}</h3>
-                                                {item.variant && (
-                                                    <p className="text-sm text-muted-foreground font-bold uppercase">{item.variant}</p>
-                                                )}
-                                                <div className="text-sm">
-                                                    {item.offer ? (
-                                                        <>
-                                                            <span className="line-through text-red-500">
-                                                                {formatCurrency(item.price)}
-                                                            </span>{' '}
-                                                            <span className="font-bold">
-                                                                {formatCurrency(
-                                                                    item.price - item.price * (item.offer / 100)
-                                                                )}
-                                                            </span>
-                                                        </>
-                                                    ) : (
-                                                        <span className="font-bold">
-                                                            {formatCurrency(item.price)}
-                                                        </span>
-                                                    )}
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div className="flex items-center space-x-2">
-                                            {/* Quantity Control */}
-                                            <Button
-                                                size="icon"
-                                                onClick={() => handleDecrement(item)}
-                                                className="bg-gray-200"
-                                            >
-                                                <MinusIcon className="h-4 w-4" />
-                                                <span className="sr-only">Decrease quantity</span>
-                                            </Button>
-                                            <span className="w-8 text-center">{item.quantity}</span>
-                                            <Button
-                                                size="icon"
-                                                onClick={() => handleIncrement(item)}
-                                                className="bg-gray-200"
-                                            >
-                                                <PlusIcon className="h-4 w-4" />
-                                                <span className="sr-only">Increase quantity</span>
-                                            </Button>
-
-                                            {/* Remove Button */}
-                                            <Button
-                                                size="icon"
-                                                variant="destructive"
-                                                onClick={() => handleRemove(item)}
-                                            >
-                                                <Trash2Icon className="h-4 w-4" />
-                                                <span className="sr-only">Remove item</span>
-                                            </Button>
-                                        </div>
-                                    </div>
+                                     <div
+                                     key={i}
+                                     className="flex items-center justify-between border p-2 rounded-lg bg-white shadow-sm gap-1"
+                                   >
+                                     <div className="flex items-center space-x-3">
+                                       <img
+                                         src={`${apiUrl}${item?.image}`}
+                                         alt={item.name}
+                                         className="w-16 h-16 object-cover rounded"
+                                       />
+                                       <div>
+                                         <p className="font-semibold text-xs">{item.name}</p>
+                                         {item.variant && (
+                                           <p className="text-xs text-muted-foreground font-bold uppercase">
+                                             {item.variant}
+                                           </p>
+                                         )}
+                                         <div className="text-xs">
+                                           {item.offer ? (
+                                             <>
+                                               <span className="line-through text-red-500">
+                                                 {formatCurrency(item.price)}
+                                               </span>{' '}
+                                               <span className="font-bold">
+                                                 {formatCurrency(
+                                                   item.price - item.price * (item.offer / 100)
+                                                 )}
+                                               </span>
+                                             </>
+                                           ) : (
+                                             <span className="font-bold">
+                                               {formatCurrency(item.price)}
+                                             </span>
+                                           )}
+                                         </div>
+                                       </div>
+                                     </div>
+                                     <div className="flex items-center space-x-1">
+                                       <Button
+                                         size="icon"
+                                         onClick={() => handleDecrement(item)}
+                                         className="bg-gray-200"
+                                       >
+                                         <MinusIcon className="h-4 w-4" />
+                                         <span className="sr-only">Decrease quantity</span>
+                                       </Button>
+                                       <span className="text-xs md:text-sm w-8 text-center">{item.quantity}</span>
+                                       <Button
+                                         size="icon"
+                                         onClick={() => handleIncrement(item)}
+                                         className="bg-gray-200"
+                                       >
+                                         <PlusIcon className="h-4 w-4" />
+                                         <span className="sr-only">Increase quantity</span>
+                                       </Button>
+                                       <Button
+                                         size="icon"
+                                         variant="destructive"
+                                         onClick={() => handleRemove(item)}
+                                       >
+                                         <Trash2Icon className="h-4 w-4" />
+                                         <span className="sr-only">Remove item</span>
+                                       </Button>
+                                     </div>
+                                   </div>
                                 ))}
                             </div>
 
