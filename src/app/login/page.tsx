@@ -112,6 +112,7 @@ const Login = () => {
               <CardDescription>We&apos;ve sent a 6-digit code to your phone number.</CardDescription>
             </CardHeader>
             <CardContent className='flex justify-center'>
+            <p>{otp}</p>
               <InputOTP maxLength={6}  value={enteredOtp} onChange={handleOtpChange}>
                 <InputOTPGroup>
                   <InputOTPSlot index={0} />
