@@ -1,5 +1,4 @@
 'use client';
-import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useSearchParams } from 'next/navigation';
@@ -8,7 +7,6 @@ import { toast } from '@/hooks/use-toast';
 
 export function withAuth(Component: React.ComponentType) {
   return function AuthenticatedComponent(props: any) {
-    const router = useRouter();
     const apiUrl = process.env.NEXT_PUBLIC_API_URL;
     const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null); // Authentication state
     const searchParams = useSearchParams();
@@ -52,7 +50,7 @@ export function withAuth(Component: React.ComponentType) {
         })
         setIsAuthenticated(false);
       }
-    }, [apiUrl, router]);
+    }, [apiUrl]);
 
     const handleRedirect = () => {
       if (!redirecting) {
@@ -61,7 +59,7 @@ export function withAuth(Component: React.ComponentType) {
         // Get the current path and set the redirect URL
         const currentPath = window.location.pathname;
         const redirectPath = searchParams.get('redirect') || `/login?redirect=${encodeURIComponent(currentPath)}`;
-        router.push(redirectPath);
+        window.location.href=redirectPath
       }
     };
     if (isAuthenticated === null) {
