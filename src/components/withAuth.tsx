@@ -10,7 +10,7 @@ export function withAuth(Component: React.ComponentType) {
     const router = useRouter();
     const apiUrl = process.env.NEXT_PUBLIC_API_URL;
     const [ok, setOk] = useState<boolean | null>(null);
-    const searchParams = useSearchParams(); // Get search parameters from the URL
+    const searchParams = useSearchParams();
 
     useEffect(() => {
       const checkAuth = async () => {
@@ -36,18 +36,23 @@ export function withAuth(Component: React.ComponentType) {
       };
 
       checkAuth();
-    }, []);
+    }, [apiUrl]);
+
+    useEffect(() => {
+      if (ok === false) {
+        // Get the current path and append it to the redirect URL
+        const currentPath = window.location.pathname;
+        const redirectPath = searchParams.get('redirect') || `/login?redirect=${encodeURIComponent(currentPath)}`;
+        router.push(redirectPath);
+      }
+    }, [ok, searchParams, router]);
 
     if (ok === null) {
       return <Spinner />;
     }
 
     if (ok === false) {
-      // Get the current path and append it to the redirect URL
-      const currentPath = window.location.pathname; // Get the current pathname
-      const redirectPath = searchParams.get('redirect') || `/login?redirect=${encodeURIComponent(currentPath)}`;
-      router.push(redirectPath);
-      return null;
+      return null; // Return null to prevent further rendering
     }
 
     return <Component {...props} />;
