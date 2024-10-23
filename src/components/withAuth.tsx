@@ -11,8 +11,8 @@ export function withAuth(Component: React.ComponentType) {
     const router = useRouter();
     const apiUrl = process.env.NEXT_PUBLIC_API_URL;
     const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null); // Authentication state
-    const searchParams = useSearchParams(); // To manage redirect query parameters
-    const [error, setError] = useState<string | null>(null); // Error state
+    const searchParams = useSearchParams();
+    const [redirecting, setRedirecting] = useState(false);
 
     useEffect(() => {
       const checkAuth = async () => {
@@ -45,18 +45,25 @@ export function withAuth(Component: React.ComponentType) {
         checkAuth();
       } else {
         console.error('API URL is not defined. Please check your environment configuration.');
-        setError('API URL is not configured.');
+        toast({
+          title: 'API URL not found',
+          description: 'Please set the variable in your project.',
+          variant: 'destructive',
+        })
         setIsAuthenticated(false);
       }
     }, [apiUrl, router]);
 
     const handleRedirect = () => {
-      // Get the current path and set the redirect URL
-      const currentPath = window.location.pathname;
-      const redirectPath = searchParams.get('redirect') || `/login?redirect=${encodeURIComponent(currentPath)}`;
-      router.push(redirectPath);
-    };
+      if (!redirecting) {
+        setRedirecting(true); // Mark that we are redirecting to prevent a loop
 
+        // Get the current path and set the redirect URL
+        const currentPath = window.location.pathname;
+        const redirectPath = searchParams.get('redirect') || `/login?redirect=${encodeURIComponent(currentPath)}`;
+        router.push(redirectPath);
+      }
+    };
     if (isAuthenticated === null) {
       return <Spinner />; // Show loading spinner while verifying the token
     }
