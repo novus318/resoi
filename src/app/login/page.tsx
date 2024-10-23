@@ -15,6 +15,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
 import axios from 'axios';
+import Authorised from '@/components/Authorised';
 
 const Login = () => {
   const [otpSent, setOtpSent] = useState(false);
@@ -29,16 +30,30 @@ const Login = () => {
   const searchParams = useSearchParams();
   const redirect = searchParams.get('redirect'); 
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  const [ok, setOk] = useState<boolean | null>(null);
 
-  useEffect(() => {
-    // Check if userToken exists in local storage and redirect to /order if it does
+
+  useEffect (() => {
+   checkAuth()
+  }, []);
+
+  const checkAuth = async () => {
     const token = localStorage.getItem('userToken');
-    if (token) {
-      router.push('/order');
+
+if(token){
+  try {
+    const response = await axios.post(`${apiUrl}/api/user/verify`, { token });
+
+    if (response.data.success) {
+      setOk(true);
+    } else {
+      setOk(false);
     }
-  }, [router]);
-
-
+  } catch (error) {
+    setOk(false);
+  }
+}
+  };
   const handleOtpChange = (value: string) => {
     setEnteredOtp(value);
   };
@@ -97,7 +112,9 @@ setLoading(true)
       });
     }
   };
-
+ if(ok){
+   return <Authorised/>
+ }
   return (
     <div className="flex items-center justify-center h-screen w-full">
       <div className="">

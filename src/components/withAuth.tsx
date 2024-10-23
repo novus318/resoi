@@ -1,6 +1,6 @@
 'use client';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useSearchParams } from 'next/navigation';
 import Spinner from './Spinner';
@@ -10,8 +10,7 @@ export function withAuth(Component: React.ComponentType) {
     const router = useRouter();
     const apiUrl = process.env.NEXT_PUBLIC_API_URL;
     const [ok, setOk] = useState<boolean | null>(null);
-    const searchParams = useSearchParams();
-    const redirectedRef = useRef(false); // Prevents multiple redirects
+    const searchParams = useSearchParams(); // Get search parameters from the URL
 
     useEffect(() => {
       const checkAuth = async () => {
@@ -37,26 +36,18 @@ export function withAuth(Component: React.ComponentType) {
       };
 
       checkAuth();
-    }, [apiUrl]);
-
-    useEffect(() => {
-      if (ok === false && !redirectedRef.current) {
-        redirectedRef.current = true; // Mark redirect as handled
-
-        // Get the current path and append it to the redirect URL
-        const currentPath = window.location.pathname;
-        const redirectPath = searchParams.get('redirect') || `/login?redirect=${encodeURIComponent(currentPath)}`;
-
-        router.replace(redirectPath); // Use replace instead of push to avoid history stacking
-      }
-    }, [ok, searchParams, router]);
+    }, [apiUrl, router]);
 
     if (ok === null) {
       return <Spinner />;
     }
 
     if (ok === false) {
-      return null; // Return null to stop rendering after the redirect
+      // Get the current path and append it to the redirect URL
+      const currentPath = window.location.pathname; // Get the current pathname
+      const redirectPath = searchParams.get('redirect') || `/login?redirect=${encodeURIComponent(currentPath)}`;
+      router.push(redirectPath);
+      return null;
     }
 
     return <Component {...props} />;

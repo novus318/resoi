@@ -1,6 +1,6 @@
 'use client'
 import React, { useEffect, useRef, useState } from 'react';
-import { Loader2, MapPin, MinusIcon, PlusIcon, Trash2Icon } from 'lucide-react';
+import { Loader2, MapPin, MinusIcon, PlusIcon, ShoppingCart, Trash2Icon } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -14,6 +14,7 @@ import { withAuth } from '@/components/withAuth';
 import axios from 'axios';
 import { toast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 
 const Checkout = () => {
@@ -128,6 +129,13 @@ const Checkout = () => {
   };
 
   const handleProceed = async () => {
+    if (cartItems.length === 0) {
+      toast({
+        title: 'No items in your cart please add.',
+        variant: 'destructive'
+      })
+      return;
+    }
     // Validate if address is provided
     if (!address) {
       toast({
@@ -165,12 +173,12 @@ const Checkout = () => {
       if(paymentMethod === 'cod'){
         const response = await axios.post(`${apiUrl}/api/online/create/order`, orderDetails);
         if (response.data.success) {
-          dispatch(clearCart());
           toast({
             title: 'Order placed successfully!',
             variant: 'default'
           });
           router.push(`/order-success/${response.data.order.orderId}`)
+          dispatch(clearCart());
         }
       }else{
       const response = await axios.post(`${apiUrl}/api/online/create/order`, orderDetails);
@@ -194,10 +202,6 @@ const Checkout = () => {
     }
   };
 
-  if(cartItems.length < 1){
-    router.push('/order')
-  }
-
   return (
     <>
       <Navbar />
@@ -209,7 +213,15 @@ const Checkout = () => {
                 <CardTitle className='p-3'>Your Orders</CardTitle>
               <div className='mx-auto px-2'>
                   {cartItems.length === 0 ? (
-                    <p>Your cart is empty.</p>
+                    <div className="flex flex-col items-center justify-center h-full">
+                    <ShoppingCart className="h-16 w-16 text-muted-foreground mb-4" /> {/* Icon for the cart */}
+                    <p className="text-center text-sm text-muted-foreground mb-2">
+                      Your cart is empty. Add items to proceed.
+                    </p>
+                    <Link href="/order" className="inline-flex items-center px-4 py-2 text-sm font-semibold text-white bg-primary rounded hover:bg-primary-foreground transition-colors duration-200">
+                      Order Now
+                    </Link>
+                  </div>
                   ) : (
                     <>
                       <div className="space-y-4">
