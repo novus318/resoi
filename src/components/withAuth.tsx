@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useSearchParams } from 'next/navigation';
 import Spinner from './Spinner'; // Assuming you have a Spinner component for loading states
+import { toast } from '@/hooks/use-toast';
 
 export function withAuth(Component: React.ComponentType) {
   return function AuthenticatedComponent(props: any) {
@@ -26,16 +27,16 @@ export function withAuth(Component: React.ComponentType) {
         try {
           // API call to verify the token
           const response = await axios.post(`${apiUrl}/api/user/verify`, { token });
-
           if (response.data.success) {
             setIsAuthenticated(true); // Authentication successful
-          } else {
-            setIsAuthenticated(false); // Invalid token
-            handleRedirect();
           }
         } catch (error:any) {
-          setIsAuthenticated(false); // API error or server error
-          setError(error.response?.data?.message || 'Authentication failed. Please log in again.');
+          setIsAuthenticated(false);
+          toast({
+            title: 'Authentication failed',
+            description: error.response?.data?.message || error.message || 'Authentication failed. Please try again.',
+            variant: 'destructive',
+          })
           handleRedirect();
         }
       };
