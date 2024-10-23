@@ -11,7 +11,7 @@ export function withAuth(Component: React.ComponentType) {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL;
     const [ok, setOk] = useState<boolean | null>(null);
     const searchParams = useSearchParams();
-    const redirectedRef = useRef(false); // Ref to prevent multiple redirects
+    const redirectedRef = useRef(false); // Prevents multiple redirects
 
     useEffect(() => {
       const checkAuth = async () => {
@@ -41,11 +41,13 @@ export function withAuth(Component: React.ComponentType) {
 
     useEffect(() => {
       if (ok === false && !redirectedRef.current) {
+        redirectedRef.current = true; // Mark redirect as handled
+
         // Get the current path and append it to the redirect URL
         const currentPath = window.location.pathname;
         const redirectPath = searchParams.get('redirect') || `/login?redirect=${encodeURIComponent(currentPath)}`;
-        redirectedRef.current = true; // Prevent multiple redirects
-        router.push(redirectPath);
+
+        router.replace(redirectPath); // Use replace instead of push to avoid history stacking
       }
     }, [ok, searchParams, router]);
 
@@ -54,7 +56,7 @@ export function withAuth(Component: React.ComponentType) {
     }
 
     if (ok === false) {
-      return null; // Return null to prevent further rendering after redirect
+      return null; // Return null to stop rendering after the redirect
     }
 
     return <Component {...props} />;
