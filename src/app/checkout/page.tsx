@@ -25,6 +25,7 @@ const Checkout = () => {
   const [paymentMethod, setPaymentMethod] = useState('cod');
   const [map, setMap] = useState<any>(null);
   const [address, setAddress] = useState('');
+  const [user, setuser] = useState<any>({});
   const [coordinates, setCoordinates] = useState({ lat: 12.1024, lng: 75.2024 });
   const autocompleteRef = useRef<any>(null);
   const geocoderRef = useRef<any>(null);
@@ -32,7 +33,33 @@ const Checkout = () => {
   const [loading, setLoading] = useState(false);
   const [reloadKey, setReloadKey] = useState(0);
 
+const fetchAdress = async()=>{
+  try {
+    const token = localStorage.getItem('userToken');
+   if(token){
+    const response = await axios.get(`${apiUrl}/api/user/address`,{
+      headers: {
+        Authorization: token,
+      },
+    });
+    if (response.data.success) {
+      setAddress(response.data.address);
+      setuser({
+        name: response.data.name,
+        mobileNumber: response.data.number,
+      })
+      if(response.data.coordinates){
+        setCoordinates(response.data.coordinates);
+      }
+    }
+   }
+  } catch (error) {
+  }
+}
 
+  useEffect(() => {
+    fetchAdress()
+  }, []);
   const handleMapLoad = (map: any) => {
     setMap(map);
     geocoderRef.current = new window.google.maps.Geocoder();
@@ -336,7 +363,7 @@ const Checkout = () => {
 
                 <GoogleMap
                   center={coordinates}
-                  zoom={14}
+                  zoom={15}
                   mapContainerStyle={{ width: '100%', height: '300px' }}
                   options={{
                     disableDefaultUI: true, // Removes default controls like zoom, map type, etc.
@@ -365,6 +392,8 @@ const Checkout = () => {
                   </CardHeader>
                   <CardContent>
                     <div>
+                      <p className='text-sm font-semibold'>Name: {user.name}</p>
+                      <p className='text-sm font-semibold'>Phone: +91{user.mobileNumber}</p>
                       <p className='text-sm'>{address || 'No address selected'}</p>
                     </div>
                   </CardContent>

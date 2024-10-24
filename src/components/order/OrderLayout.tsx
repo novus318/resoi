@@ -24,7 +24,6 @@ interface LayoutProps {
   const [sortOpen, setSortOpen] = useState(false);
   return (
     <div className="w-full min-h-screen bg-cusgray py-10 md:py-16" style={{ backgroundColor: 'rgba(249, 226, 204, 0.30)' }}>
-      <Navbar />
     
       <Button
         onClick={() => setOpen(!open)}
@@ -32,7 +31,7 @@ interface LayoutProps {
       >
        <Filter/>
       </Button>
-      <div className="max-w-6xl mx-auto pt-14 md:px-0">
+      <div className="max-w-6xl mx-auto md:px-0">
         <div className="grid grid-cols-4 gap-x-6">
           <div
             onClick={() => setOpen(!open)}
