@@ -48,11 +48,12 @@ type Item = {
 };
 
 type AddToCartProps = {
+  isOnline: boolean;
   item: Item;
   children: React.ReactNode;
 };
 
-const AddtoCart: React.FC<AddToCartProps> = ({ item,children }) => {
+const AddtoCart: React.FC<AddToCartProps> = ({ isOnline,item,children }) => {
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const isDesktop = useMediaQuery({ query: "(min-width: 768px)" });
@@ -201,7 +202,7 @@ const AddtoCart: React.FC<AddToCartProps> = ({ item,children }) => {
   if (isDesktop) {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger asChild>
+        <DialogTrigger asChild disabled={!isOnline}>
           <div>
             {children}
           <Button
@@ -221,7 +222,7 @@ const AddtoCart: React.FC<AddToCartProps> = ({ item,children }) => {
 
   return (
     <Drawer open={open} onOpenChange={setOpen}>
-      <DrawerTrigger asChild>
+      <DrawerTrigger asChild disabled={!isOnline}>
       <div>
             {children}
           <Button

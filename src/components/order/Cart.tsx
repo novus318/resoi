@@ -18,7 +18,7 @@ import {
 import { useRouter } from 'next/navigation';
 
 
-const Cart = () => {
+const Cart = ({isOnline}:any) => {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL;
     const dispatch = useDispatch();
     const cartItems = useSelector((state: any) => state.cart.items);
@@ -72,97 +72,106 @@ const Cart = () => {
                     </div>
                 </Button>
             </DrawerTrigger>
+         {isOnline ?
             <DrawerContent>
-                <div className="mx-auto w-full max-w-sm p-2">
-                <DrawerTitle className='mb-2'>
-                Your Cart
-                </DrawerTitle>
-                    {cartItems.length === 0 ? (
-                        <p>Your cart is empty.</p>
-                    ) : (
-                        <>
-                            <div className="space-y-4">
-                                {cartItems.map((item: any,i:any) => (
-                                     <div
-                                     key={i}
-                                     className="flex items-center justify-between border p-2 rounded-lg bg-white shadow-sm gap-1"
-                                   >
-                                     <div className="flex items-center space-x-3">
-                                       <img
-                                         src={`${apiUrl}${item?.image}`}
-                                         alt={item.name}
-                                         className="w-16 h-16 object-cover rounded"
-                                       />
-                                       <div>
-                                         <p className="font-semibold text-xs">{item.name}</p>
-                                         {item.variant && (
-                                           <p className="text-xs text-muted-foreground font-bold uppercase">
-                                             {item.variant}
-                                           </p>
-                                         )}
-                                         <div className="text-xs">
-                                           {item.offer ? (
-                                             <>
-                                               <span className="line-through text-red-500">
-                                                 {formatCurrency(item.price)}
-                                               </span>{' '}
-                                               <span className="font-bold">
-                                                 {formatCurrency(
-                                                   item.price - item.price * (item.offer / 100)
-                                                 )}
-                                               </span>
-                                             </>
-                                           ) : (
-                                             <span className="font-bold">
-                                               {formatCurrency(item.price)}
-                                             </span>
-                                           )}
-                                         </div>
-                                       </div>
-                                     </div>
-                                     <div className="flex items-center space-x-1">
-                                       <Button
-                                         size="icon"
-                                         onClick={() => handleDecrement(item)}
-                                         className="bg-gray-200"
-                                       >
-                                         <MinusIcon className="h-4 w-4" />
-                                         <span className="sr-only">Decrease quantity</span>
-                                       </Button>
-                                       <span className="text-xs md:text-sm w-8 text-center">{item.quantity}</span>
-                                       <Button
-                                         size="icon"
-                                         onClick={() => handleIncrement(item)}
-                                         className="bg-gray-200"
-                                       >
-                                         <PlusIcon className="h-4 w-4" />
-                                         <span className="sr-only">Increase quantity</span>
-                                       </Button>
-                                       <Button
-                                         size="icon"
-                                         variant="destructive"
-                                         onClick={() => handleRemove(item)}
-                                       >
-                                         <Trash2Icon className="h-4 w-4" />
-                                         <span className="sr-only">Remove item</span>
-                                       </Button>
+            <div className="mx-auto w-full max-w-sm p-2">
+            <DrawerTitle className='mb-2'>
+            Your Cart
+            </DrawerTitle>
+                {cartItems.length === 0 ? (
+                    <p>Your cart is empty.</p>
+                ) : (
+                    <>
+                        <div className="space-y-4">
+                            {cartItems.map((item: any,i:any) => (
+                                 <div
+                                 key={i}
+                                 className="flex items-center justify-between border p-2 rounded-lg bg-white shadow-sm gap-1"
+                               >
+                                 <div className="flex items-center space-x-3">
+                                   <img
+                                     src={`${apiUrl}${item?.image}`}
+                                     alt={item.name}
+                                     className="w-16 h-16 object-cover rounded"
+                                   />
+                                   <div>
+                                     <p className="font-semibold text-xs">{item.name}</p>
+                                     {item.variant && (
+                                       <p className="text-xs text-muted-foreground font-bold uppercase">
+                                         {item.variant}
+                                       </p>
+                                     )}
+                                     <div className="text-xs">
+                                       {item.offer ? (
+                                         <>
+                                           <span className="line-through text-red-500">
+                                             {formatCurrency(item.price)}
+                                           </span>{' '}
+                                           <span className="font-bold">
+                                             {formatCurrency(
+                                               item.price - item.price * (item.offer / 100)
+                                             )}
+                                           </span>
+                                         </>
+                                       ) : (
+                                         <span className="font-bold">
+                                           {formatCurrency(item.price)}
+                                         </span>
+                                       )}
                                      </div>
                                    </div>
-                                ))}
-                            </div>
+                                 </div>
+                                 <div className="flex items-center space-x-1">
+                                   <Button
+                                     size="icon"
+                                     onClick={() => handleDecrement(item)}
+                                     className="bg-gray-200"
+                                   >
+                                     <MinusIcon className="h-4 w-4" />
+                                     <span className="sr-only">Decrease quantity</span>
+                                   </Button>
+                                   <span className="text-xs md:text-sm w-8 text-center">{item.quantity}</span>
+                                   <Button
+                                     size="icon"
+                                     onClick={() => handleIncrement(item)}
+                                     className="bg-gray-200"
+                                   >
+                                     <PlusIcon className="h-4 w-4" />
+                                     <span className="sr-only">Increase quantity</span>
+                                   </Button>
+                                   <Button
+                                     size="icon"
+                                     variant="destructive"
+                                     onClick={() => handleRemove(item)}
+                                   >
+                                     <Trash2Icon className="h-4 w-4" />
+                                     <span className="sr-only">Remove item</span>
+                                   </Button>
+                                 </div>
+                               </div>
+                            ))}
+                        </div>
 
-                            {/* Total Amount */}
-                            <div className="mt-4 text-lg font-bold flex justify-between">
-                                <span>Total:</span>
-                                <span>{formatCurrency(calculateTotal())}</span>
-                            </div>
+                        {/* Total Amount */}
+                        <div className="mt-4 text-lg font-bold flex justify-between">
+                            <span>Total:</span>
+                            <span>{formatCurrency(calculateTotal())}</span>
+                        </div>
 
-                            {/* Checkout Button */}
-                            <Button className="mt-4 w-full" onClick={()=> router.push('/checkout')}>Proceed to Checkout</Button>
-                        </>
-                    )}
-                </div>
-            </DrawerContent>
+                        {/* Checkout Button */}
+                        <Button className="mt-4 w-full" onClick={()=> router.push('/checkout')}>Proceed to Checkout</Button>
+                    </>
+                )}
+            </div>
+        </DrawerContent>:
+        <DrawerContent>
+          <div className="mx-auto w-full max-w-sm p-2">
+            <DrawerTitle className='mb-2'>
+              Your Cart
+            </DrawerTitle>
+            <p>Please wait the store is closed now.</p>
+          </div>
+          </DrawerContent>}
         </Drawer>
     );
 };

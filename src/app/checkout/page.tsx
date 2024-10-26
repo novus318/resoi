@@ -32,6 +32,19 @@ const Checkout = () => {
   const [isEditingAddress, setIsEditingAddress] = useState(false);
   const [loading, setLoading] = useState(false);
   const [reloadKey, setReloadKey] = useState(0);
+  const [isOnline, setIsOnline] = useState(false);
+
+
+const fetchStatus = async () => {
+  try {
+    const response = await axios.get(`${apiUrl}/api/store/status`);
+    if(response.data.success){
+      setIsOnline(response.data.status === 'open');
+    }
+  } catch (error) {
+    console.error('Error fetching store status', error);
+  }
+};
 
 const fetchAdress = async()=>{
   try {
@@ -58,6 +71,7 @@ const fetchAdress = async()=>{
 }
 
   useEffect(() => {
+    fetchStatus();
     fetchAdress()
   }, []);
   const handleMapLoad = (map: any) => {
@@ -251,7 +265,7 @@ const fetchAdress = async()=>{
                   </div>
                   ) : (
                     <>
-                      <div className="space-y-4">
+                     {isOnline ? <div className="space-y-4">
                         {cartItems.map((item: any, i: any) => (
                           <div
                             key={i}
@@ -319,120 +333,132 @@ const fetchAdress = async()=>{
                             </div>
                           </div>
                         ))}
+                      </div>:
+                      <div>
+                        <div className="flex flex-col items-center justify-center h-full">
+                          <ShoppingCart className="h-16 w-16 text-muted-foreground mb-4" /> {/* Icon for the cart */}
+                          <p className="text-center text-sm text-muted-foreground mb-2">
+                            The store is closed.
+                          </p>
+                        </div>
                       </div>
+                      }
                     </>
                   )}
               </div>
               <Separator className="my-2" />
               <CardFooter>
+              {isOnline &&
                 <div className="flex justify-between w-full">
-                  <span className="font-semibold">Sub total:</span>
-                  <span className="font-semibold">{formatCurrency(calculateTotal())}</span>
-                </div>
+                <span className="font-semibold">Sub total:</span>
+                <span className="font-semibold">{formatCurrency(calculateTotal())}</span>
+              </div>}
               </CardFooter>
             </Card>
           </div>
 
+        {isOnline &&
           <Card className='p-2'>
-            <CardHeader>
-              <CardTitle>Address</CardTitle>
-            </CardHeader>
-              <LoadScript
-                googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ''}
-                libraries={['places']}
-                key={reloadKey}
-              >
-                <div className="autocomplete-input mb-2">
-                  <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}>
-                    <Input
-                      type="text"
-                      placeholder="Enter delivery address"
-                      value={address} // Bind the input value to the address state
-                      onChange={handleAddressChange} // Allow user to type if needed
-                      className={`w-full p-2 border rounded-md ${isEditingAddress ? 'border-secondary-foreground border-2': ''}`}
-                      disabled={!isEditingAddress} // Disable input when not editing
-                    />
-                  </Autocomplete>
-                  <Button onClick={handleEditToggle} className="mt-2">
-                    {isEditingAddress ? 'Save Address' : !address ? 'Add address':'Edit Address'}
-                  </Button>
-                  {isEditingAddress && (
-                    <p className="text-xs text-destructive mt-2 font-bold">Drag the marker to set your delivery location.</p>
-                  )}
-                </div>
-
-                <GoogleMap
-                  center={coordinates}
-                  zoom={15}
-                  mapContainerStyle={{ width: '100%', height: '300px' }}
-                  options={{
-                    disableDefaultUI: true, // Removes default controls like zoom, map type, etc.
-                    zoomControl: true, // Enables only zoom control
-                    controlSize: 23,
-                    keyboardShortcuts: false,
-                    draggable: isEditingAddress, // Disable map dragging if not editing
-                    scrollwheel: isEditingAddress, // Disable scroll zoom if not editing
-                  }}
-                  onLoad={handleMapLoad}     
-                >
-                  <Marker
-                    position={coordinates}
-                    draggable={isEditingAddress} // Enable marker drag only during editing
-                    onDragEnd={handleMarkerDragEnd} // Update function to handle dragging
+          <CardHeader>
+            <CardTitle>Address</CardTitle>
+          </CardHeader>
+            <LoadScript
+              googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ''}
+              libraries={['places']}
+              key={reloadKey}
+            >
+              <div className="autocomplete-input mb-2">
+                <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}>
+                  <Input
+                    type="text"
+                    placeholder="Enter delivery address"
+                    value={address} // Bind the input value to the address state
+                    onChange={handleAddressChange} // Allow user to type if needed
+                    className={`w-full p-2 border rounded-md ${isEditingAddress ? 'border-secondary-foreground border-2': ''}`}
+                    disabled={!isEditingAddress} // Disable input when not editing
                   />
-                </GoogleMap>
-
-                {/* Display formatted address */}
-                <Card className="w-full mt-4 mx-auto">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <MapPin className="h-5 w-5 text-muted-foreground" />
-                      Shipping Address
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div>
-                      <p className='text-sm font-semibold'>Name: {user.name}</p>
-                      <p className='text-sm font-semibold'>Phone: +91{user.mobileNumber}</p>
-                      <p className='text-sm'>{address || 'No address selected'}</p>
-                    </div>
-                  </CardContent>
-                </Card>
-              </LoadScript>
-
-              <div className="mt-4">
-                <h2 className="font-semibold mb-2">Payment Method</h2>
-                <p className='text-destructive text-xs font-bold'>*Note: Online payments are under maintainance</p>
-                <div className="flex space-x-4">
-                  <Button
-                    variant={paymentMethod === 'online' ? 'default' : 'outline'}
-                    onClick={() => setPaymentMethod('online')}
-                    disabled
-                    className="w-full"
-                  >
-                    Online Payment
-                  </Button>
-                  <Button
-                    variant={paymentMethod === 'cod' ? 'default' : 'outline'}
-                    onClick={() => setPaymentMethod('cod')}
-                    className="w-full"
-                  >
-                    Cash on Delivery
-                  </Button>
-                </div>
+                </Autocomplete>
+                <Button onClick={handleEditToggle} className="mt-2">
+                  {isEditingAddress ? 'Save Address' : !address ? 'Add address':'Edit Address'}
+                </Button>
+                {isEditingAddress && (
+                  <p className="text-xs text-destructive mt-2 font-bold">Drag the marker to set your delivery location.</p>
+                )}
               </div>
-            <Separator className="my-4" />
-            <div className="flex justify-between w-full px-5">
-              <span className="font-semibold">Total:</span>
-              <span className="font-semibold">{formatCurrency(calculateTotal())}</span>
+
+              <GoogleMap
+                center={coordinates}
+                zoom={15}
+                mapContainerStyle={{ width: '100%', height: '300px' }}
+                options={{
+                  disableDefaultUI: true, // Removes default controls like zoom, map type, etc.
+                  zoomControl: true, // Enables only zoom control
+                  controlSize: 23,
+                  keyboardShortcuts: false,
+                  draggable: isEditingAddress, // Disable map dragging if not editing
+                  scrollwheel: isEditingAddress, // Disable scroll zoom if not editing
+                }}
+                onLoad={handleMapLoad}     
+              >
+                <Marker
+                  position={coordinates}
+                  draggable={isEditingAddress} // Enable marker drag only during editing
+                  onDragEnd={handleMarkerDragEnd} // Update function to handle dragging
+                />
+              </GoogleMap>
+
+              {/* Display formatted address */}
+              <Card className="w-full mt-4 mx-auto">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <MapPin className="h-5 w-5 text-muted-foreground" />
+                    Shipping Address
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div>
+                    <p className='text-sm font-semibold'>Name: {user.name}</p>
+                    <p className='text-sm font-semibold'>Phone: +91{user.mobileNumber}</p>
+                    <p className='text-sm'>{address || 'No address selected'}</p>
+                  </div>
+                </CardContent>
+              </Card>
+            </LoadScript>
+
+            <div className="mt-4">
+              <h2 className="font-semibold mb-2">Payment Method</h2>
+              <p className='text-destructive text-xs font-bold'>*Note: Online payments are under maintainance</p>
+              <div className="flex space-x-4">
+                <Button
+                  variant={paymentMethod === 'online' ? 'default' : 'outline'}
+                  onClick={() => setPaymentMethod('online')}
+                  disabled
+                  className="w-full"
+                >
+                  Online Payment
+                </Button>
+                <Button
+                  variant={paymentMethod === 'cod' ? 'default' : 'outline'}
+                  onClick={() => setPaymentMethod('cod')}
+                  className="w-full"
+                >
+                  Cash on Delivery
+                </Button>
+              </div>
             </div>
-            <Separator className="my-4" />
-            <CardFooter>
-              <Button className="w-full" disabled={loading} onClick={handleProceed}>
-                {loading ? <Loader2 className='animate-spin'/> : `Proceed with ${formatCurrency(calculateTotal())}`}
-              </Button>
-            </CardFooter>
-          </Card>
+          <Separator className="my-4" />
+          <div className="flex justify-between w-full px-5">
+            <span className="font-semibold">Total:</span>
+            <span className="font-semibold">{formatCurrency(calculateTotal())}</span>
+          </div>
+          <Separator className="my-4" />
+          <CardFooter>
+            <Button className="w-full" disabled={loading} onClick={handleProceed}>
+              {loading ? <Loader2 className='animate-spin'/> : `Proceed with ${formatCurrency(calculateTotal())}`}
+            </Button>
+          </CardFooter>
+        </Card>
+        }
 
         </div>
       </div></>
