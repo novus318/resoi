@@ -146,7 +146,7 @@ const ConfirmedOrder = withAuth(({ params }: any) => {
                       ))}
                    {order?.paymentStatus === 'pending' ? (
                        <div className="flex justify-center w-full">
-                       <Link href={`/table/${order.table._id}`} className='bg-primary text-primary-foreground px-4 rounded-sm flex gap-2 py-1'>
+                       <Link href={`/table/${order?.table?._id}`} className='bg-primary text-primary-foreground px-4 rounded-sm flex gap-2 py-1'>
                          <PlusCircle />Add more
                        </Link>
                      </div>

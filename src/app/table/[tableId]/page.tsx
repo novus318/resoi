@@ -69,7 +69,7 @@ const TableOrder = withAuth(({ params }: any) => {
   const fetchItems = async () => {
     try {
       setLoadingItems(true);
-      const response = await axios.get(`${apiUrl}/api/item/get-items`);
+      const response = await axios.get(`${apiUrl}/api/item/get-table-items/${tableId}`);
       if (response.data.success) {
         setItems(response.data.items);
       }
