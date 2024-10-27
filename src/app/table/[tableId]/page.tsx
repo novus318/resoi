@@ -135,7 +135,7 @@ if(!ok){
         ) : (
           filteredItems.map((item: Item) => (
             <div key={item?._id}>
-              <ProductCard key={item._id} item={item} isSelected={false} />
+              <ProductCard key={item._id} item={item} />
             </div>
           ))
         )
