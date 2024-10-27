@@ -7,6 +7,7 @@ import axios from "axios";
 import { formatCurrency } from "@/lib/currencyFormat";
 import Unauthorised from "@/components/checkout/Unauthorised";
 import Spinner from "@/components/Spinner";
+import { useRouter } from "next/navigation";
 
 interface PageProps {
   params: {
@@ -20,6 +21,7 @@ const OrderSuccess = ({params}:PageProps) => {
   const { orderId } = params; // Get orderId from route params
   const [orderDetails, setOrderDetails] = useState<any>(null); // State to store order details
   const [loading, setLoading] = useState(true); // Loading state
+  const router =useRouter()
 
   useEffect(() => {
     const fetchOrderDetails = async () => {
@@ -80,7 +82,11 @@ const OrderSuccess = ({params}:PageProps) => {
         </div>
       </CardContent>
       <CardFooter>
-        <Button className="w-full">Track Order</Button>
+        <Button onClick={
+          () => {
+            router.push('/order/viewAllOrders')
+          }
+        } className="w-full">Track Order</Button>
       </CardFooter>
     </Card>
   </div>

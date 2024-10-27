@@ -14,7 +14,7 @@ const ProductCard = ({ item,isOnline }: any) => {
 
   return (
     <div className="rounded-xl cursor-pointer relative">
-    {isOnline && (
+    {isOnline === false && (
       <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10 rounded-xl cursor-not-allowed">
         <p className="text-white text-lg font-semibold">Closed</p>
       </div>
