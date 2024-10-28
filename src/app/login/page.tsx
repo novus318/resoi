@@ -131,7 +131,7 @@ const Login = () => {
           <Card className="w-full mx-auto">
             <CardHeader>
               <CardTitle className="text-2xl font-bold">Enter OTP</CardTitle>
-              <CardDescription>We've sent a 6-digit code to your phone number.</CardDescription>
+              <CardDescription>We&apos;ve sent a 6-digit code to your phone number.</CardDescription>
             </CardHeader>
             <CardContent className="flex justify-center">
               <InputOTP maxLength={6} value={enteredOtp} onChange={handleOtpChange}>

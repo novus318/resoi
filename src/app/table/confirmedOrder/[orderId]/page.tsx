@@ -12,9 +12,11 @@ import { Button } from '@/components/ui/button';
 import UnauthorisedTable from '@/components/tableOrders/UnauthorisedTable';
 import CashPayAtCounter from '@/components/tableOrders/CashPayAtCounter';
 import { toast } from '@/hooks/use-toast';
+import { useRouter } from 'next/navigation';
 
 const ConfirmedOrder = withAuth(({ params }: any) => {
   const { orderId } = params
+  const router =useRouter()
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   const [order, setOrder] = useState<any>(null);
   const [cartItems, setCartItems] = useState([]);
@@ -61,12 +63,22 @@ const ConfirmedOrder = withAuth(({ params }: any) => {
       if(paymentMethod=== 'cash'){
         handleOpen()
       }else{
-
+        const response = await axios.post(`${apiUrl}/api/tableOrder/table-order/online-pay`,{
+          orderId
+        });
+        if (response.data.success) {
+          router.push(response.data.payment.instrumentResponse.redirectInfo.url)
+          setLoading(false);
+        }
       }
-    } catch (error) {
-      console.error(error);
+    } catch (error:any) {
+      toast({
+        title: 'something went wrong retry.',
+        description: error.response?.data?.message || error.message || 'Something went wrong',
+        variant: 'destructive'
+      });
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   if(!ok){
@@ -192,12 +204,11 @@ const ConfirmedOrder = withAuth(({ params }: any) => {
              {order?.paymentStatus === 'pending' && 
               <div className="mt-4">
               <h2 className="font-semibold mb-2">Payment Method</h2>
-              <p className='text-destructive text-xs font-bold'>*Note: Online payments are under maintainance</p>
+              {/* <p className='text-destructive text-xs font-bold'>*Note: Online payments are under maintainance</p> */}
               <div className="flex space-x-3">
                 <Button
                   variant={paymentMethod === 'online' ? 'default' : 'outline'}
                   onClick={() => setPaymentMethod('online')}
-                  disabled
                   className="w-full"
                 >
                   Card / UPI / bank

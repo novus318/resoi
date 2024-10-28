@@ -16,6 +16,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { formatCurrency } from '@/lib/currencyFormat'
 import Navbar from '@/components/Navbar'
+import Link from 'next/link'
 
 const Page = () => {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL
@@ -89,6 +90,9 @@ const Page = () => {
     <div className="flex justify-center w-full mt-12">
       <div className="max-w-3xl py-8 w-full px-2">
         <h2 className="text-3xl font-bold mb-6 text-center lg:text-left">Your Orders</h2>
+        <Link href='/order' className="inline-flex mb-3 items-center border px-3 py-1 text-sm font-semibold bg-primary-foreground rounded hover:bg-primary hover:text-primary-foreground transition-colors duration-200">
+          Add New Order
+        </Link>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
           <Select value={status} onValueChange={setStatus}>
             <SelectTrigger className="w-[180px]">

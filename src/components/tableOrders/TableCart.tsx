@@ -103,6 +103,7 @@ const TableCart = ({id}:any) => {
           });
           localStorage.setItem('orderId', response.data.order.orderId);
           router.push(`/table/confirmedOrder/${response.data.order.orderId}`)
+          dispatch(clearCart());
         }
       }
       } catch (error:any) {
