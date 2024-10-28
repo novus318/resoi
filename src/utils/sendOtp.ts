@@ -14,7 +14,7 @@ try {
     WHATSAPP_API_URL as string,
     {
       messaging_product: 'whatsapp',
-      to: number,
+      to: `+91${number}`,
       type: 'template',
       template: {
         name: 'user_auth',

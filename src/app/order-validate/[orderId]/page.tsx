@@ -1,4 +1,5 @@
 'use client'
+
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,11 +14,11 @@ import { clearCart } from "@/store/cartSlice";
 
 interface PageProps {
   params: {
-    orderId: string
-  }
+    orderId: string;
+  };
 }
 
-const OrderValidate = ({params}: PageProps) => {
+const OrderValidate = ({ params }: PageProps) => {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   const { orderId } = params;
   const [orderDetails, setOrderDetails] = useState<any>(null);
@@ -27,36 +28,26 @@ const OrderValidate = ({params}: PageProps) => {
 
   useEffect(() => {
     const fetchOrderDetails = async () => {
-      if (orderId) {
-        try {
-          const response = await axios.get(`${apiUrl}/api/online/order-status/${orderId}`);
-          if (response.data.success) {
-            setOrderDetails(response.data.order);
-            if (response.data.order.status === 'confirmed') {
-              dispatch(clearCart());
-            }
-          }
-        } catch (error) {
-          console.error("Error fetching order details:", error);
-        } finally {
-          setLoading(false);
+      try {
+        const response = await axios.get(`${apiUrl}/api/online/order-status/${orderId}`);
+        if (response.data.success) {
+          setOrderDetails(response.data.order);
         }
+      } catch (error) {
+        console.error("Error fetching order details:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchOrderDetails();
 
-    // Polling if the order status is "pending"
     const intervalId = setInterval(async () => {
       if (orderDetails?.status === "pending") {
         try {
           const response = await axios.get(`${apiUrl}/api/online/order-status/${orderId}`);
           if (response.data.success && response.data.order.status !== "pending") {
             setOrderDetails(response.data.order);
-            if (response.data.order.status === "confirmed") {
-              dispatch(clearCart());
-            }
-            clearInterval(intervalId); // Stop polling when status is not pending
           }
         } catch (error) {
           console.error("Error fetching order details:", error);
@@ -64,8 +55,14 @@ const OrderValidate = ({params}: PageProps) => {
       }
     }, 1300);
 
-    return () => clearInterval(intervalId); // Cleanup on unmount
+    return () => clearInterval(intervalId);
   }, [orderId, orderDetails?.status]);
+
+  useEffect(() => {
+    if (orderDetails?.status === "confirmed") {
+      dispatch(clearCart());
+    }
+  }, [orderDetails?.status, dispatch]);
 
   if (loading) {
     return <Spinner />;
@@ -114,11 +111,11 @@ const OrderValidate = ({params}: PageProps) => {
       <Card className="w-full max-w-md">
         <CardHeader>{renderOrderStatus()}</CardHeader>
         <CardContent className="space-y-4">
-        <p className="text-center text-gray-600">
-    {orderDetails.status === "confirmed" && "Thank you for your order. Your delicious meal is on its way!"}
-    {orderDetails.status === "pending" && "Your order is being processed. Please wait a moment!"}
-    {orderDetails.status === "failed" && "We're sorry, but there was an issue with your order. Please try again."}
-  </p>
+          <p className="text-center text-gray-600">
+            {orderDetails.status === "confirmed" && "Thank you for your order. Your delicious meal is on its way!"}
+            {orderDetails.status === "pending" && "Your order is being processed. Please wait a moment!"}
+            {orderDetails.status === "failed" && "We're sorry, but there was an issue with your order. Please try again."}
+          </p>
           <div className="bg-gray-50 p-4 rounded-lg space-y-2">
             <div className="flex items-center justify-between">
               <span className="font-semibold">Order Number:</span>
