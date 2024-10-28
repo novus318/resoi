@@ -218,18 +218,12 @@ const fetchAdress = async()=>{
             title: 'Order placed successfully!',
             variant: 'default'
           });
-          router.push(`/order-success/${response.data.order.orderId}`)
-          dispatch(clearCart());
+          router.push(`/order-validate/${response.data.order.orderId}`)
         }
       }else{
       const response = await axios.post(`${apiUrl}/api/online/create/order`, orderDetails);
       if (response.data.success) {
-        toast({
-          title: 'Order placed successfully!',
-          variant: 'default'
-        });
-        console.log(response.data)
-        // router.push(`/order-success/${response.data.order.orderId}`)
+        router.push(response.data.payment.instrumentResponse.redirectInfo.url)
       }
     }
     } catch (error:any) {
@@ -427,12 +421,11 @@ const fetchAdress = async()=>{
 
             <div className="mt-4">
               <h2 className="font-semibold mb-2">Payment Method</h2>
-              <p className='text-destructive text-xs font-bold'>*Note: Online payments are under maintainance</p>
+              {/* <p className='text-destructive text-xs font-bold'>*Note: Online payments are under maintainance</p> */}
               <div className="flex space-x-4">
                 <Button
                   variant={paymentMethod === 'online' ? 'default' : 'outline'}
                   onClick={() => setPaymentMethod('online')}
-                  disabled
                   className="w-full"
                 >
                   Online Payment

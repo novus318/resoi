@@ -86,7 +86,7 @@ const Page = () => {
   return (
   <>
     <Navbar />
-    <div className="flex justify-center w-full mt-10">
+    <div className="flex justify-center w-full mt-12">
       <div className="max-w-3xl py-8 w-full px-2">
         <h2 className="text-3xl font-bold mb-6 text-center lg:text-left">Your Orders</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
