@@ -61,6 +61,7 @@ const OrderValidate = ({ params }: PageProps) => {
   useEffect(() => {
     if (orderDetails?.status === "confirmed") {
       dispatch(clearCart());
+      localStorage.removeItem('existingOrderId');
     }
   }, [orderDetails?.status, dispatch]);
 

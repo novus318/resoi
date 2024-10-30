@@ -174,10 +174,10 @@ const fetchAdress = async()=>{
       toast({
         title: 'No items in your cart please add.',
         variant: 'destructive'
-      })
+      });
       return;
     }
-    // Validate if address is provided
+  
     if (!address) {
       toast({
         title: 'Please provide an address.',
@@ -186,7 +186,6 @@ const fetchAdress = async()=>{
       return;
     }
   
-    // Validate if payment method is selected
     if (!paymentMethod) {
       toast({
         title: 'Please select a payment method.',
@@ -195,11 +194,11 @@ const fetchAdress = async()=>{
       return;
     }
   
-    // Set loading state
     setLoading(true);
   
     try {
       const token = localStorage.getItem('userToken');
+      const existingOrderID = localStorage.getItem('existingOrderId');
   
       // Prepare order details
       const orderDetails = {
@@ -209,23 +208,24 @@ const fetchAdress = async()=>{
         paymentMethod,
         cartItems,
         totalAmount: calculateTotal(),
+        ...(existingOrderID ? { existingOrderId: existingOrderID } : {}), // Include orderId if it exists
       };
-
-      if(paymentMethod === 'cod'){
-        const response = await axios.post(`${apiUrl}/api/online/create/order`, orderDetails);
-        if (response.data.success) {
+  
+      // Make the API call based on payment method
+      const response = await axios.post(`${apiUrl}/api/online/create/order`, orderDetails);
+      if (response.data.success) {
+        if (paymentMethod === 'cod') {
           toast({
             title: 'Order placed successfully!',
             variant: 'default'
           });
-          router.push(`/order-validate/${response.data.order.orderId}`)
+          router.push(`/order-validate/${response.data.order.orderId}`);
+        } else {
+          // For online payment, store orderId in local storage
+          localStorage.setItem('existingOrderId', response.data.order.orderId);
+          router.push(response.data.payment.instrumentResponse.redirectInfo.url);
         }
-      }else{
-      const response = await axios.post(`${apiUrl}/api/online/create/order`, orderDetails);
-      if (response.data.success) {
-        router.push(response.data.payment.instrumentResponse.redirectInfo.url)
       }
-    }
     } catch (error:any) {
       toast({
         title: 'An error occurred while placing the order.',
@@ -236,6 +236,7 @@ const fetchAdress = async()=>{
       setLoading(false);
     }
   };
+  
 
   return (
     <>
