@@ -149,7 +149,7 @@ if(!ok){
         </>
       )}
       {cart.length > 0 &&
-        <TableCart id={tableId} />}
+        <TableCart id={tableId} orderId={orderId} />}
       {orderId && <IfOrder orderId={orderId} />}
     </Layout>
   );

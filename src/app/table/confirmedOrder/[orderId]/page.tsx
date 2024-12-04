@@ -16,7 +16,7 @@ import { useRouter } from 'next/navigation';
 
 const ConfirmedOrder = withAuth(({ params }: any) => {
   const { orderId } = params
-  const router =useRouter()
+  const router = useRouter()
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   const [order, setOrder] = useState<any>(null);
   const [cartItems, setCartItems] = useState([]);
@@ -60,10 +60,10 @@ const ConfirmedOrder = withAuth(({ params }: any) => {
   const handleSubmit = async () => {
     setLoading(true);
     try {
-      if(paymentMethod=== 'cash'){
+      if (paymentMethod === 'cash') {
         handleOpen()
-      }else{
-        const response = await axios.post(`${apiUrl}/api/tableOrder/table-order/online-pay`,{
+      } else {
+        const response = await axios.post(`${apiUrl}/api/tableOrder/table-order/online-pay`, {
           orderId
         });
         if (response.data.success) {
@@ -71,7 +71,7 @@ const ConfirmedOrder = withAuth(({ params }: any) => {
           setLoading(false);
         }
       }
-    } catch (error:any) {
+    } catch (error: any) {
       toast({
         title: 'something went wrong retry.',
         description: error.response?.data?.message || error.message || 'Something went wrong',
@@ -81,8 +81,8 @@ const ConfirmedOrder = withAuth(({ params }: any) => {
     }
   };
 
-  if(!ok){
-    return <UnauthorisedTable/>
+  if (!ok) {
+    return <UnauthorisedTable />
   }
   return (
     <>
@@ -109,67 +109,68 @@ const ConfirmedOrder = withAuth(({ params }: any) => {
                     <div className="space-y-4">
                       {cartItems.map((item: any, i: any) => (
                         <div
-                        key={i}
-                        className="flex items-center justify-between border p-2 rounded-lg bg-white shadow-sm"
-                      >
-                        <div className="flex items-center space-x-3">
-                          <img
-                            src={`${apiUrl}${item?.image}`}
-                            alt={item.name}
-                            className="w-16 h-16 object-cover rounded"
-                          />
-                          <div>
-                            <p className="font-semibold text-xs">{item.name}</p>
-                            {item.variant && (
-                              <p className="text-xs text-muted-foreground font-bold uppercase">
-                                {item.variant}
-                              </p>
-                            )}
-                            <div className="text-xs">
-                              {item.offer ? (
-                                <>
-                                  <span className="line-through text-red-500">
-                                    {formatCurrency(item.price)}
-                                  </span>{' '}
-                                  <span className="font-bold">
-                                    {formatCurrency(
-                                      item.price - item.price * (item.offer / 100)
-                                    )}
-                                  </span>
-                                </>
-                              ) : (
-                                <span className="font-bold">
-                                  {formatCurrency(item.price)}
-                                </span>
+                          key={i}
+                          className="flex items-center justify-between border p-2 rounded-lg bg-white shadow-sm"
+                        >
+                          <div className="flex items-center space-x-3">
+                            <img
+                              src={`${apiUrl}${item?.image}`}
+                              alt={item.name}
+                              className="w-16 h-16 object-cover rounded"
+                            />
+                            <div>
+                              <p className="font-semibold text-xs">{item.name}</p>
+                              {item.variant && (
+                                <p className="text-xs text-muted-foreground font-bold uppercase">
+                                  {item.variant}
+                                </p>
                               )}
+                              <div className="text-xs">
+                                {item.offer ? (
+                                  <>
+                                    <span className="line-through text-red-500">
+                                      {formatCurrency(item.price)}
+                                    </span>{' '}
+                                    <span className="font-bold">
+                                      {formatCurrency(
+                                        item.price - item.price * (item.offer / 100)
+                                      )}
+                                    </span>
+                                  </>
+                                ) : (
+                                  <span className="font-bold">
+                                    {formatCurrency(item.price)}
+                                  </span>
+                                )}
+                              </div>
                             </div>
                           </div>
+                          <div className="grid items-center">
+                            <p className='font-bold text-xs text-muted-foreground'>Quantity: {item.quantity}</p>
+                            <p className='font-bold text-xs text-muted-foreground'>Amount:
+                              {formatCurrency(
+                                item.price * item.quantity -
+                                item.price * item.quantity * (item.offer / 100)
+                              )}
+                            </p>
+                          </div>
                         </div>
-                        <div className="grid items-center">
-                         <p className='font-bold text-xs text-muted-foreground'>Quantity: {item.quantity}</p>
-                         <p className='font-bold text-xs text-muted-foreground'>Amount:
-                          {formatCurrency(
-                            item.price * item.quantity -
-                              item.price * item.quantity * (item.offer / 100)
-                          )}
-                         </p>
-                        </div>
-                      </div>
                       ))}
-                   {order?.paymentStatus === 'pending' ? (
-                       <div className="flex justify-center w-full">
-                       <Link href={`/table/${order?.table?._id}`} className='bg-primary text-primary-foreground px-4 rounded-sm flex gap-2 py-1'>
-                         <PlusCircle />Add more
-                       </Link>
-                     </div>
-                   ):(
-                     <div className="flex justify-center w-full">
-                     <p className='text-xs'>
-                     Your payment has been confirmed.<br/>
-                     Thank you!
-                     </p>
-                     </div>
-                   )}
+                      {order?.paymentStatus === 'pending' ? (
+                        <div className="flex justify-center w-full">
+                          {order?.orderType === 'dining' &&
+                            <Link href={`/table/${order?.table?._id}`} className='bg-primary text-primary-foreground px-4 rounded-sm flex gap-2 py-1'>
+                              <PlusCircle />Add more
+                            </Link>}
+                        </div>
+                      ) : (
+                        <div className="flex justify-center w-full">
+                          <p className='text-xs'>
+                            Your payment has been confirmed.<br />
+                            Thank you!
+                          </p>
+                        </div>
+                      )}
                     </div>
                   </>
                 )}
@@ -183,73 +184,73 @@ const ConfirmedOrder = withAuth(({ params }: any) => {
               </CardFooter>
             </Card>
           </div>
-      <div>
-      <Card className='p-2'>
-                <Card className="w-full mt-4 mx-auto">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <MapPin className="h-5 w-5 text-muted-foreground" />
-                      Table : {order?.table?.tableName}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div>
-                      <p className='text-sm font-semibold'>Name: {order?.user?.name} </p>
-                      <p className='text-sm font-semibold'>Phone: +91 {order?.user?.mobileNumber} </p>
-                      <p className='text-sm'></p>
-                    </div>
-                  </CardContent>
-                </Card>
+          <div>
+            <Card className='p-2'>
+              <Card className="w-full mt-4 mx-auto">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <MapPin className="h-5 w-5 text-muted-foreground" />
+                    Order type : {order?.orderType === 'dining' ? `${order?.table?.tableName}` : 'parcel'}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div>
+                    <p className='text-sm font-semibold'>Name: {order?.user?.name} </p>
+                    <p className='text-sm font-semibold'>Phone: +91 {order?.user?.mobileNumber} </p>
+                    <p className='text-sm'></p>
+                  </div>
+                </CardContent>
+              </Card>
 
-             {order?.paymentStatus === 'pending' && 
-              <div className="mt-4">
-              <h2 className="font-semibold mb-2">Payment Method</h2>
-              {/* <p className='text-destructive text-xs font-bold'>*Note: Online payments are under maintainance</p> */}
-              <div className="flex space-x-3">
-                <Button
-                  variant={paymentMethod === 'online' ? 'default' : 'outline'}
-                  onClick={() => setPaymentMethod('online')}
-                  className="w-full"
-                >
-                  Card / UPI / bank
-                </Button>
-                <Button
-                  variant={paymentMethod === 'cash' ? 'default' : 'outline'}
-                  onClick={() => setPaymentMethod('cash')}
-                  className="w-full"
-                >
-                  Cash
-                </Button>
+              {order?.paymentStatus === 'pending' &&
+                <div className="mt-4">
+                  <h2 className="font-semibold mb-2">Payment Method</h2>
+                  {/* <p className='text-destructive text-xs font-bold'>*Note: Online payments are under maintainance</p> */}
+                  <div className="flex space-x-3">
+                    <Button
+                      variant={paymentMethod === 'online' ? 'default' : 'outline'}
+                      onClick={() => setPaymentMethod('online')}
+                      className="w-full"
+                    >
+                      Card / UPI / bank
+                    </Button>
+                    <Button
+                      variant={paymentMethod === 'cash' ? 'default' : 'outline'}
+                      onClick={() => setPaymentMethod('cash')}
+                      className="w-full"
+                    >
+                      Cash
+                    </Button>
+                  </div>
+                </div>}
+              <Separator className="my-4" />
+              <div className="flex justify-between w-full px-5">
+                <span className="font-semibold">Total:</span>
+                <span className="font-semibold">{formatCurrency(calculateTotal())}</span>
               </div>
-            </div>}
-            <Separator className="my-4" />
-            <div className="flex justify-between w-full px-5">
-              <span className="font-semibold">Total:</span>
-              <span className="font-semibold">{formatCurrency(calculateTotal())}</span>
-            </div>
-            <Separator className="my-4" />
-            <CardFooter>
-            {order?.paymentStatus === 'pending' ? (
-                <Button className="w-full" disabled={loading} onClick={handleSubmit}>
-                {loading ? <Loader2 className='animate-spin'/> : `Proceed payment for ${formatCurrency(calculateTotal())}`}
-              </Button>
-            ):(
-              <div>
-                <div className='bg-primary text-primary-foreground py-1 px-3 rounded-md flex justify-between mx-auto'>
-                 Your payment is done. <CheckCheck className='animate-bounce'/> 
-                </div>
-                <p className='text-sm'>
-                  We hope you enjoyed your meal.
-                </p>
-              </div>
-            )}
-            </CardFooter>
-          </Card>
-      </div>
+              <Separator className="my-4" />
+              <CardFooter>
+                {order?.paymentStatus === 'pending' ? (
+                  <Button className="w-full" disabled={loading} onClick={handleSubmit}>
+                    {loading ? <Loader2 className='animate-spin' /> : `Proceed payment for ${formatCurrency(calculateTotal())}`}
+                  </Button>
+                ) : (
+                  <div>
+                    <div className='bg-primary text-primary-foreground py-1 px-3 rounded-md flex justify-between mx-auto'>
+                      Your payment is done. <CheckCheck className='animate-bounce' />
+                    </div>
+                    <p className='text-sm'>
+                      We hope you enjoyed your meal.
+                    </p>
+                  </div>
+                )}
+              </CardFooter>
+            </Card>
+          </div>
         </div>
-            <CashPayAtCounter isOpen={isDrawerOpen} onClose={handleClose} orderId={orderId}/>
+        <CashPayAtCounter isOpen={isDrawerOpen} onClose={handleClose} orderId={orderId} />
       </div>
-      </>
+    </>
   )
 })
 
