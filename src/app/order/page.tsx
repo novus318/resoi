@@ -1,4 +1,5 @@
 'use client';
+import Navbar from '@/components/Navbar';
 import Cart from '@/components/order/Cart';
 import Layout from '@/components/order/OrderLayout';
 import ProductCard from '@/components/order/ProductCard';
@@ -104,6 +105,8 @@ const fetchStatus = async () => {
 
     
   return (
+<>
+<Navbar/>
     <Layout
     items={items}
       searchQuery={searchQuery}
@@ -134,7 +137,7 @@ const fetchStatus = async () => {
       )}
      {cart.length > 0 && 
       <Cart isOnline={isOnline}/>}
-    </Layout>
+    </Layout></>
   );
 };
 
