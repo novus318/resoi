@@ -422,11 +422,12 @@ const fetchAdress = async()=>{
 
             <div className="mt-4">
               <h2 className="font-semibold mb-2">Payment Method</h2>
-              {/* <p className='text-destructive text-xs font-bold'>*Note: Online payments are under maintainance</p> */}
+              <p className='text-destructive text-xs font-bold'>*Note: Online payments are under maintainance</p>
               <div className="flex space-x-4">
                 <Button
                   variant={paymentMethod === 'online' ? 'default' : 'outline'}
                   onClick={() => setPaymentMethod('online')}
+                  disabled
                   className="w-full"
                 >
                   Online Payment

@@ -18,7 +18,7 @@ const Footer = () => {
         </div>
 
         <div className="flex gap-4 items-center">
-          <Link href="tel:+1234567890">
+          <Link href="tel:+918281930611">
             <Phone className="text-primary" />
           </Link>
           <Link href="https://i" target="_blank">
